@@ -136,7 +136,7 @@ export default function BookingForm() {
     const parentName = showParent ? `${form.parentFirst} ${form.parentLast}` : "";
     const studentListSummary = students.map((s) => `${s.firstName} ${s.lastName} (Age ${s.age})`).join(", ");
 
-    // Build one webhook payload per contact — each creates exactly one GHL contact in Make.com
+    // Build one webhook payload per contact - each creates exactly one GHL contact in Make.com
     const webhookPayloads: object[] = [];
 
     // One payload per student
@@ -166,7 +166,7 @@ export default function BookingForm() {
       ].filter(Boolean).join("\n").trim();
 
       webhookPayloads.push({
-        // — GHL Create Contact fields —
+        // - GHL Create Contact fields -
         contactType: "student",
         firstName: s.firstName,
         lastName: s.lastName,
@@ -176,7 +176,7 @@ export default function BookingForm() {
         timezone: "America/New_York",
         tags: ["Shore Academy", "Student", "Booking Requested", form.package].filter(Boolean),
         notes: studentNotes,
-        // — Flat fields for easy Make.com mapping —
+        // - Flat fields for easy Make.com mapping -
         studentIndex: i + 1,
         age: s.age,
         swimLevel: s.swimLevel,
@@ -220,7 +220,7 @@ export default function BookingForm() {
       ].filter(Boolean).join("\n").trim();
 
       webhookPayloads.push({
-        // — GHL Create Contact fields —
+        // - GHL Create Contact fields -
         contactType: "parent_guardian",
         firstName: form.parentFirst,
         lastName: form.parentLast,
@@ -230,7 +230,7 @@ export default function BookingForm() {
         timezone: "America/New_York",
         tags: ["Shore Academy", "Parent/Guardian", "Booking Requested", form.package].filter(Boolean),
         notes: parentNotes,
-        // — Flat fields for easy Make.com mapping —
+        // - Flat fields for easy Make.com mapping -
         relationship: form.parentRelationship,
         studentsInBooking: studentListSummary,
         ...sessionInfo,
@@ -240,7 +240,7 @@ export default function BookingForm() {
     }
 
     try {
-      // 1. Web3Forms — one summary email to info@theshoreacademy.com
+      // 1. Web3Forms - one summary email to info@theshoreacademy.com
       const emailBody = webhookPayloads.map((p: any) =>
         p.contactType === "student"
           ? `STUDENT ${p.studentIndex}: ${p.firstName} ${p.lastName} | Age ${p.age} | ${p.swimLevel}${p.medical !== "None" ? ` | Medical: ${p.medical}` : ""}${p.allergies !== "None" ? ` | Allergies: ${p.allergies}` : ""}`
@@ -256,7 +256,7 @@ export default function BookingForm() {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: "dad22fec-f7dc-4d42-978f-bcc6fcaad397",
-          subject: `New Shore Academy Enrollment — ${primaryContact} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
+          subject: `New Shore Academy Enrollment - ${primaryContact} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
           from_name: "Shore Academy Website",
           name: primaryContact,
           email: showParent ? form.parentEmail : students[0].email,
@@ -270,7 +270,7 @@ export default function BookingForm() {
         }),
       });
 
-      // 2. Make.com — one webhook per contact (fires sequentially, each creates one GHL contact)
+      // 2. Make.com - one webhook per contact (fires sequentially, each creates one GHL contact)
       for (const payload of webhookPayloads) {
         await fetch("https://hook.us2.make.com/jpmo5faxu2nugc0n83nharapyyoestox", {
           method: "POST",
@@ -463,7 +463,7 @@ export default function BookingForm() {
           <div style={{ marginBottom: 32 }}>
             <div style={{ fontSize: 16, fontWeight: 700, color: "var(--navy)", marginBottom: 16, paddingBottom: 8, borderBottom: "2px solid var(--ocean)", display: "flex", alignItems: "center", gap: 10 }}>
               Parent / Guardian Information
-              <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ocean)", background: "rgba(26,111,160,0.08)", borderRadius: 20, padding: "2px 10px" }}>Required — student(s) under 18</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ocean)", background: "rgba(26,111,160,0.08)", borderRadius: 20, padding: "2px 10px" }}>Required - student(s) under 18</span>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }} className="form-row">
               <div>

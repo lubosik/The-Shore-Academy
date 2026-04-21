@@ -3,7 +3,7 @@ import Link from "next/link";
 import EnquiryForm from "@/components/EnquiryForm";
 
 export const metadata: Metadata = {
-  title: "Contact Us | The Shore Academy — Ocean Safety School South Florida",
+  title: "Contact Us | The Shore Academy - Ocean Safety School South Florida",
   description:
     "Get in touch with The Shore Academy. Email us at info@theshoreacademy.com. Serving West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale with certified ocean safety instruction.",
   openGraph: {
@@ -111,10 +111,10 @@ export default function ContactPage() {
             ))}
           </div>
 
-          {/* Google Maps embed — South Florida service area */}
+          {/* Google Maps embed - South Florida service area */}
           <div style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "var(--shadow-lg)", marginBottom: 48 }}>
             <div style={{ padding: "24px 32px", background: "#fff", borderBottom: "1px solid #eee" }}>
-              <h2 style={{ fontSize: 22, fontWeight: 700, color: "var(--navy)", margin: "0 0 4px" }}>Our Service Area — South Florida</h2>
+              <h2 style={{ fontSize: 22, fontWeight: 700, color: "var(--navy)", margin: "0 0 4px" }}>Our Service Area - South Florida</h2>
               <p style={{ fontSize: 14, color: "var(--text-light)", margin: 0 }}>
                 We serve Atlantic Ocean beaches from West Palm Beach to Miami. Session locations are confirmed during your pre-session consultation based on conditions and your nearest beach.
               </p>
