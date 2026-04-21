@@ -262,7 +262,8 @@ export default function BookingForm() {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          access_key: "dad22fec-f7dc-4d42-978f-bcc6fcaad397",
+          access_key: "e724933d-b85f-47dd-9c2b-e216f54eb6d8",
+          botcheck: false,
           subject: `New Enrollment: ${primaryContact} - ${form.package || "Package TBD"} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
           from_name: "Shore Academy Booking Form",
           name: primaryContact,
