@@ -134,76 +134,35 @@ export default function BookingForm() {
     ].join(" | ");
 
     const parentName = showParent ? `${form.parentFirst} ${form.parentLast}` : "";
-    const studentListSummary = students.map((s) => `${s.firstName} ${s.lastName} (Age ${s.age})`).join(", ");
     const minorStudents = students.filter((s) => !s.age || parseInt(s.age) < 18);
     const minorStudentSummary = minorStudents.map((s) => `${s.firstName} ${s.lastName} (Age ${s.age || "unknown"})`).join(", ");
 
-    // Build one webhook payload per contact - each creates exactly one GHL contact in Make.com
+    // Primary booker = parent/guardian if any minor present, otherwise student[0]
+    const primaryIsParent = showParent;
+    const primaryBookerName = primaryIsParent
+      ? parentName
+      : `${students[0].firstName} ${students[0].lastName}`;
+    const primaryBookerEmail = primaryIsParent ? form.parentEmail : students[0].email;
+    const primaryBookerPhone = primaryIsParent ? form.parentPhone : students[0].phone;
+    const primaryBookedFor = primaryIsParent
+      ? minorStudentSummary
+      : students.slice(1).map((s) => `${s.firstName} ${s.lastName} (Age ${s.age})`).join(", ") || "";
+
+    // Build one webhook payload per contact — each creates exactly one GHL contact in Make.com.
+    // Primary booker is ALWAYS index 0 so Make.com sends the email notification on the first fire only.
     const webhookPayloads: object[] = [];
 
-    // One payload per student
-    students.forEach((s, i) => {
-      const isAdult = parseInt(s.age) >= 18;
-      const studentNotes = [
-        `=== STUDENT PROFILE ===`,
-        `Name: ${s.firstName} ${s.lastName}`,
-        `Age: ${s.age}`,
-        `Swim Level: ${s.swimLevel}`,
-        s.medical ? `Medical Conditions: ${s.medical}` : "Medical Conditions: None",
-        s.allergies ? `Allergies: ${s.allergies}` : "Allergies: None",
-        s.emergencyContact ? `Emergency Contact: ${s.emergencyContact} (${s.emergencyPhone})` : "",
-        "",
-        `=== SESSION ===`,
-        `Package: ${form.package}`,
-        `Preferred Date: ${form.preferredDate}`,
-        `Preferred Time: ${form.preferredTime}`,
-        form.location ? `Preferred Location: ${form.location}` : "",
-        numStudents > 1 ? `Group Booking: ${numStudents} students total` : "",
-        "",
-        showParent && !isAdult ? `=== PARENT/GUARDIAN ===\nName: ${parentName}\nRelationship: ${form.parentRelationship || "Parent/Guardian"}\nEmail: ${form.parentEmail}\nPhone: ${form.parentPhone}` : "",
-        "",
-        `=== CONSENTS ===`,
-        consentText,
-        form.additionalNotes ? `\n=== ADDITIONAL NOTES ===\n${form.additionalNotes}` : "",
-      ].filter(Boolean).join("\n").trim();
-
-      webhookPayloads.push({
-        // - GHL Create Contact fields -
-        contactType: "student",
-        firstName: s.firstName,
-        lastName: s.lastName,
-        email: isAdult ? s.email : "",
-        phone: isAdult ? s.phone : "",
-        source: "Website Booking Form",
-        timezone: "America/New_York",
-        tags: ["Shore Academy", "Student", "Booking Requested", form.package].filter(Boolean),
-        notes: studentNotes,
-        // - Flat fields for easy Make.com mapping -
-        studentIndex: i + 1,
-        age: s.age,
-        swimLevel: s.swimLevel,
-        medical: s.medical || "None",
-        allergies: s.allergies || "None",
-        emergencyContactName: s.emergencyContact,
-        emergencyContactPhone: s.emergencyPhone,
-        parentGuardianName: showParent && !isAdult ? parentName : "",
-        parentGuardianEmail: showParent && !isAdult ? form.parentEmail : "",
-        parentGuardianPhone: showParent && !isAdult ? form.parentPhone : "",
-        parentRelationship: showParent && !isAdult ? form.parentRelationship : "",
-        ...sessionInfo,
-        ...consentInfo,
-        additionalNotes: form.additionalNotes,
-      });
-    });
-
-    // One payload for parent/guardian (only if any student is under 18)
+    // If parent is primary booker, push their payload first
     if (showParent) {
       const parentNotes = [
-        `=== PARENT / GUARDIAN ===`,
+        `=== PRIMARY BOOKER (PARENT / GUARDIAN) ===`,
         `Name: ${parentName}`,
         `Relationship: ${form.parentRelationship || "Parent/Guardian"}`,
+        `Email: ${form.parentEmail}`,
+        `Phone: ${form.parentPhone}`,
+        `Booked for: ${minorStudentSummary}`,
         "",
-        `=== MINOR STUDENTS (this guardian is responsible for) ===`,
+        `=== MINOR STUDENTS ===`,
         minorStudents.map((s, i) => [
           `Child ${i + 1}: ${s.firstName} ${s.lastName} | Age: ${s.age} | Level: ${s.swimLevel}`,
           s.medical ? `  Medical: ${s.medical}` : "",
@@ -222,7 +181,6 @@ export default function BookingForm() {
       ].filter(Boolean).join("\n").trim();
 
       webhookPayloads.push({
-        // - GHL Create Contact fields -
         contactType: "parent_guardian",
         firstName: form.parentFirst,
         lastName: form.parentLast,
@@ -230,27 +188,87 @@ export default function BookingForm() {
         phone: form.parentPhone,
         source: "Website Booking Form",
         timezone: "America/New_York",
-        tags: ["Shore Academy", "Parent/Guardian", "Booking Requested", form.package].filter(Boolean),
+        tags: ["Shore Academy", "Parent/Guardian", "Primary Booker", "Booking Requested", form.package].filter(Boolean),
         notes: parentNotes,
-        // - Flat fields for easy Make.com mapping -
+        primaryBooker: true,
+        bookedFor: minorStudentSummary,
+        bookedBy: "",
         relationship: form.parentRelationship,
         studentsInBooking: minorStudentSummary,
+        sendEmailNotification: false, // overridden to true below since this is index 0
         ...sessionInfo,
         ...consentInfo,
         additionalNotes: form.additionalNotes,
       });
     }
 
+    // Student payloads
+    students.forEach((s, i) => {
+      const isAdult = parseInt(s.age) >= 18;
+      const isStudentPrimary = !primaryIsParent && i === 0;
+      const studentBookedFor = isStudentPrimary ? primaryBookedFor : "";
+      const studentNotes = [
+        `=== ${isStudentPrimary ? "PRIMARY BOOKER — " : ""}STUDENT PROFILE ===`,
+        `Name: ${s.firstName} ${s.lastName}`,
+        `Age: ${s.age}`,
+        `Swim Level: ${s.swimLevel}`,
+        s.medical ? `Medical Conditions: ${s.medical}` : "Medical Conditions: None",
+        s.allergies ? `Allergies: ${s.allergies}` : "Allergies: None",
+        s.emergencyContact ? `Emergency Contact: ${s.emergencyContact} (${s.emergencyPhone})` : "",
+        isStudentPrimary && studentBookedFor ? `Booked for: ${studentBookedFor}` : "",
+        !isStudentPrimary ? `Booked by (primary contact): ${primaryBookerName}` : "",
+        "",
+        `=== SESSION ===`,
+        `Package: ${form.package}`,
+        `Preferred Date: ${form.preferredDate}`,
+        `Preferred Time: ${form.preferredTime}`,
+        form.location ? `Preferred Location: ${form.location}` : "",
+        numStudents > 1 ? `Group Booking: ${numStudents} students total` : "",
+        "",
+        showParent && !isAdult ? `=== PARENT/GUARDIAN ===\nName: ${parentName}\nRelationship: ${form.parentRelationship || "Parent/Guardian"}\nEmail: ${form.parentEmail}\nPhone: ${form.parentPhone}` : "",
+        "",
+        `=== CONSENTS ===`,
+        consentText,
+        form.additionalNotes ? `\n=== ADDITIONAL NOTES ===\n${form.additionalNotes}` : "",
+      ].filter(Boolean).join("\n").trim();
+
+      webhookPayloads.push({
+        contactType: "student",
+        firstName: s.firstName,
+        lastName: s.lastName,
+        email: isAdult ? s.email : "",
+        phone: isAdult ? s.phone : "",
+        source: "Website Booking Form",
+        timezone: "America/New_York",
+        tags: ["Shore Academy", "Student", isStudentPrimary ? "Primary Booker" : "", "Booking Requested", form.package].filter(Boolean),
+        notes: studentNotes,
+        studentIndex: i + 1,
+        age: s.age,
+        swimLevel: s.swimLevel,
+        medical: s.medical || "None",
+        allergies: s.allergies || "None",
+        emergencyContactName: s.emergencyContact,
+        emergencyContactPhone: s.emergencyPhone,
+        parentGuardianName: showParent && !isAdult ? parentName : "",
+        parentGuardianEmail: showParent && !isAdult ? form.parentEmail : "",
+        parentGuardianPhone: showParent && !isAdult ? form.parentPhone : "",
+        parentRelationship: showParent && !isAdult ? form.parentRelationship : "",
+        primaryBooker: isStudentPrimary,
+        bookedFor: studentBookedFor,
+        bookedBy: isStudentPrimary ? "" : primaryBookerName,
+        sendEmailNotification: false, // overridden to true on index 0 below
+        ...sessionInfo,
+        ...consentInfo,
+        additionalNotes: form.additionalNotes,
+      });
+    });
+
     try {
       function esc(s: unknown): string {
         return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
       }
 
-      const primaryContact = showParent
-        ? `${form.parentFirst} ${form.parentLast}`
-        : `${students[0].firstName} ${students[0].lastName}`;
-
-      const emailSubject = `New Book a Session Lead — ${esc(primaryContact)} | Shore Academy`;
+      const emailSubject = `New Book a Session Lead — ${esc(primaryBookerName)} | Shore Academy`;
 
       const studentRowsHtml = students.map((s, i) => `
         <tr><td colspan="2" style="padding:16px 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">
@@ -297,7 +315,14 @@ export default function BookingForm() {
       <tr><td style="background:#ffffff;padding:32px 36px;border-left:1px solid #e2e8f0;border-right:1px solid #e2e8f0;">
         <table width="100%" cellpadding="0" cellspacing="0">
 
-          <tr><td colspan="2" style="padding:0 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">Session Details</td></tr>
+          <tr><td colspan="2" style="padding:0 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">Primary Contact (Call This Person)</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:160px;font-size:13px;font-weight:700;color:#64748b;">Name</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;font-weight:600;">${esc(primaryBookerName)}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Email</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;"><a href="mailto:${esc(primaryBookerEmail)}" style="color:#1a6fa0;">${esc(primaryBookerEmail)}</a></td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Phone</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(primaryBookerPhone)}</td></tr>
+          ${primaryIsParent ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Role</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.parentRelationship || "Parent/Guardian")}</td></tr>` : ""}
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Booked for</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(primaryBookedFor || "Themselves")}</td></tr>
+
+          <tr><td colspan="2" style="padding:20px 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">Session Details</td></tr>
           <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:160px;font-size:13px;font-weight:700;color:#64748b;">Package</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;font-weight:600;">${esc(form.package || "Not selected")}</td></tr>
           <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Preferred Date</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.preferredDate)}</td></tr>
           <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Preferred Time</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.preferredTime)}</td></tr>
@@ -332,12 +357,13 @@ export default function BookingForm() {
 </body>
 </html>`;
 
-      // Tag the primary contact payload with subject + HTML for the Make.com Gmail module
-      // sendEmailNotification = true only on the first payload so Make.com sends one email per booking
-      const primaryIndex = showParent ? webhookPayloads.length - 1 : 0;
-      (webhookPayloads[primaryIndex] as any).emailSubject = emailSubject;
-      (webhookPayloads[primaryIndex] as any).emailHtml = emailHtml;
-      (webhookPayloads[primaryIndex] as any).sendEmailNotification = true;
+      // Primary booker is always index 0. Set email fields on it, explicitly false on all others.
+      (webhookPayloads[0] as any).emailSubject = emailSubject;
+      (webhookPayloads[0] as any).emailHtml = emailHtml;
+      (webhookPayloads[0] as any).sendEmailNotification = true;
+      for (let i = 1; i < webhookPayloads.length; i++) {
+        (webhookPayloads[i] as any).sendEmailNotification = false;
+      }
 
       // Make.com - one webhook per contact (fires sequentially, each creates one GHL contact)
       for (const payload of webhookPayloads) {
