@@ -135,6 +135,8 @@ export default function BookingForm() {
 
     const parentName = showParent ? `${form.parentFirst} ${form.parentLast}` : "";
     const studentListSummary = students.map((s) => `${s.firstName} ${s.lastName} (Age ${s.age})`).join(", ");
+    const minorStudents = students.filter((s) => !s.age || parseInt(s.age) < 18);
+    const minorStudentSummary = minorStudents.map((s) => `${s.firstName} ${s.lastName} (Age ${s.age || "unknown"})`).join(", ");
 
     // Build one webhook payload per contact - each creates exactly one GHL contact in Make.com
     const webhookPayloads: object[] = [];
@@ -158,7 +160,7 @@ export default function BookingForm() {
         form.location ? `Preferred Location: ${form.location}` : "",
         numStudents > 1 ? `Group Booking: ${numStudents} students total` : "",
         "",
-        showParent ? `=== PARENT/GUARDIAN ===\nName: ${parentName}\nRelationship: ${form.parentRelationship || "Parent/Guardian"}\nEmail: ${form.parentEmail}\nPhone: ${form.parentPhone}` : "",
+        showParent && !isAdult ? `=== PARENT/GUARDIAN ===\nName: ${parentName}\nRelationship: ${form.parentRelationship || "Parent/Guardian"}\nEmail: ${form.parentEmail}\nPhone: ${form.parentPhone}` : "",
         "",
         `=== CONSENTS ===`,
         consentText,
@@ -184,10 +186,10 @@ export default function BookingForm() {
         allergies: s.allergies || "None",
         emergencyContactName: s.emergencyContact,
         emergencyContactPhone: s.emergencyPhone,
-        parentGuardianName: showParent ? parentName : "",
-        parentGuardianEmail: showParent ? form.parentEmail : "",
-        parentGuardianPhone: showParent ? form.parentPhone : "",
-        parentRelationship: showParent ? form.parentRelationship : "",
+        parentGuardianName: showParent && !isAdult ? parentName : "",
+        parentGuardianEmail: showParent && !isAdult ? form.parentEmail : "",
+        parentGuardianPhone: showParent && !isAdult ? form.parentPhone : "",
+        parentRelationship: showParent && !isAdult ? form.parentRelationship : "",
         ...sessionInfo,
         ...consentInfo,
         additionalNotes: form.additionalNotes,
@@ -201,9 +203,9 @@ export default function BookingForm() {
         `Name: ${parentName}`,
         `Relationship: ${form.parentRelationship || "Parent/Guardian"}`,
         "",
-        `=== STUDENTS IN THIS BOOKING ===`,
-        students.map((s, i) => [
-          `Student ${i + 1}: ${s.firstName} ${s.lastName} | Age: ${s.age} | Level: ${s.swimLevel}`,
+        `=== MINOR STUDENTS (this guardian is responsible for) ===`,
+        minorStudents.map((s, i) => [
+          `Child ${i + 1}: ${s.firstName} ${s.lastName} | Age: ${s.age} | Level: ${s.swimLevel}`,
           s.medical ? `  Medical: ${s.medical}` : "",
           s.allergies ? `  Allergies: ${s.allergies}` : "",
         ].filter(Boolean).join("\n")).join("\n"),
@@ -232,7 +234,7 @@ export default function BookingForm() {
         notes: parentNotes,
         // - Flat fields for easy Make.com mapping -
         relationship: form.parentRelationship,
-        studentsInBooking: studentListSummary,
+        studentsInBooking: minorStudentSummary,
         ...sessionInfo,
         ...consentInfo,
         additionalNotes: form.additionalNotes,
@@ -266,6 +268,7 @@ export default function BookingForm() {
         ${s.allergies ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Allergies</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#dc2626;">${esc(s.allergies)}</td></tr>` : ""}
         ${s.emergencyContact ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Emergency</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.emergencyContact)}${s.emergencyPhone ? ` &middot; ${esc(s.emergencyPhone)}` : ""}</td></tr>` : ""}
         ${parseInt(s.age) >= 18 ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Email</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.email)}</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Phone</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.phone)}</td></tr>` : ""}
+        ${parseInt(s.age) < 18 && showParent ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Parent/Guardian</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a6fa0;">${esc(form.parentFirst)} ${esc(form.parentLast)} &middot; ${esc(form.parentEmail)} &middot; ${esc(form.parentPhone)}</td></tr>` : ""}
       `).join("");
 
       const parentSectionHtml = showParent ? `
@@ -276,6 +279,7 @@ export default function BookingForm() {
         <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Relationship</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.parentRelationship || "Parent/Guardian")}</td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Email</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;"><a href="mailto:${esc(form.parentEmail)}" style="color:#1a6fa0;">${esc(form.parentEmail)}</a></td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Phone</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.parentPhone)}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Guardian for</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;font-weight:600;">${minorStudents.map((s) => `${esc(s.firstName)} ${esc(s.lastName)} (Age ${esc(s.age)})`).join(", ")}</td></tr>
       ` : "";
 
       const emailHtml = `<!DOCTYPE html>
