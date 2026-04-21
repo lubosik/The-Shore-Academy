@@ -15,6 +15,7 @@ function calculateAgeEST(dob: string): number {
 
 export default function EnquiryForm() {
   const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -34,13 +35,34 @@ export default function EnquiryForm() {
 
     const age = form.dateOfBirth ? calculateAgeEST(form.dateOfBirth) : null;
 
-    // Fire both web3forms (email) and GHL (CRM contact) in parallel
-    const [emailRes, ghlRes] = await Promise.allSettled([
-      fetch("https://api.web3forms.com/submit", {
+    // Fire GHL contact creation in the background — never blocks user-facing result
+    fetch("/api/ghl-enquiry", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        topic: form.topic,
+        message: form.message,
+        dateOfBirth: form.dateOfBirth,
+        age,
+      }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (!d.success) console.error("GHL enquiry failed:", d.error); })
+      .catch((e) => console.error("GHL enquiry error:", e));
+
+    // Email notification via web3forms
+    let emailOk = false;
+    let emailMsg = "";
+    try {
+      const emailRes = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: "dad22fec-f7dc-4d42-978f-bcc6fcaad397",
+          botcheck: false,
           subject: "New Shore Academy Enquiry",
           from_name: form.name,
           name: form.name,
@@ -52,29 +74,16 @@ export default function EnquiryForm() {
           message: form.message,
           redirect: false,
         }),
-      }).then((r) => r.json()),
-
-      fetch("/api/ghl-enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          topic: form.topic,
-          message: form.message,
-          dateOfBirth: form.dateOfBirth,
-          age,
-        }),
-      }).then((r) => r.json()),
-    ]);
-
-    // Succeed as long as the email notification went through
-    const emailOk = emailRes.status === "fulfilled" && emailRes.value?.success;
-    if (ghlRes.status === "rejected" || (ghlRes.status === "fulfilled" && !ghlRes.value?.success)) {
-      console.error("GHL enquiry submission failed:", ghlRes.status === "fulfilled" ? ghlRes.value?.error : ghlRes.reason);
+      });
+      const data = await emailRes.json();
+      emailOk = data.success === true;
+      emailMsg = data.message || "";
+      if (!emailOk) console.error("web3forms error:", emailMsg, data);
+    } catch (e) {
+      console.error("web3forms fetch error:", e);
     }
 
+    setErrorMsg(emailOk ? "" : emailMsg || "Submission failed. Please try again.");
     setStatus(emailOk ? "success" : "error");
   }
 
@@ -201,7 +210,7 @@ export default function EnquiryForm() {
 
       {status === "error" && (
         <p style={{ color: "#ef4444", fontSize: 14, marginBottom: 16, padding: "12px 16px", background: "#fef2f2", borderRadius: 8, border: "1px solid #fecaca" }}>
-          Something went wrong. Please try again or email us directly at info@theshoreacademy.com
+          {errorMsg || "Something went wrong. Please try again or email us directly at info@theshoreacademy.com"}
         </p>
       )}
 
