@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     const topicLabel = topicContext[body.topic] || "your enquiry";
 
-    const emailSubject = `New Inquiry Lead${body.topic ? ` — ${body.topic}` : ""} | Shore Academy`;
+    const emailSubject = `New Inquiry Lead${body.topic ? ` | ${body.topic}` : ""} | Shore Academy`;
 
     const emailHtml = `<!DOCTYPE html>
 <html>
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 </body>
 </html>`;
 
-    const confirmationEmailSubject = `We received your enquiry, ${firstName} — Shore Academy`;
+    const confirmationEmailSubject = `We got your message, ${firstName} | Shore Academy`;
 
     const confirmationEmailHtml = `<!DOCTYPE html>
 <html>
@@ -94,11 +94,11 @@ export async function POST(req: Request) {
 
       <!-- Body -->
       <tr><td style="background:#ffffff;padding:40px 40px 32px;">
-        <h1 style="margin:0 0 18px;font-size:26px;font-weight:700;color:#0a1628;line-height:1.3;">We got your message, ${esc(firstName)}.</h1>
+        <h1 style="margin:0 0 18px;font-size:26px;font-weight:700;color:#0a1628;line-height:1.3;">Hey ${esc(firstName)}, we got your message.</h1>
         <p style="margin:0 0 18px;font-size:16px;color:#1a2332;line-height:1.75;">
-          Thank you for reaching out about <strong>${esc(topicLabel)}</strong>. We have received your enquiry and a member of our team will be in touch with you within <strong style="color:#e05c3a;">24 hours</strong>.
+          Thanks for getting in touch about <strong>${esc(topicLabel)}</strong>. Someone from our team will be back with you within <strong style="color:#e05c3a;">24 hours</strong> to go over everything.
         </p>
-        <p style="margin:0 0 24px;font-size:15px;color:#5a6a7a;line-height:1.7;">Here is a quick summary of what you sent us:</p>
+        <p style="margin:0 0 24px;font-size:15px;color:#5a6a7a;line-height:1.7;">Here is what you sent us:</p>
 
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
           <tr>
@@ -124,26 +124,30 @@ export async function POST(req: Request) {
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
                   <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">1</div>
                 </td>
-                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">A Shore Academy team member reviews your enquiry and prepares a personalised response.</td>
+                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">We look over your message and put together a response that actually answers your question.</td>
               </tr>
               <tr>
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
                   <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">2</div>
                 </td>
-                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">We reach out within 24 hours via email or phone to answer everything about ${esc(topicLabel)}.</td>
+                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">Someone from the team reaches out within 24 hours by email or phone to chat through ${esc(topicLabel)} with you.</td>
               </tr>
               <tr>
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
                   <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">3</div>
                 </td>
-                <td style="padding:0 0 0 12px;font-size:14px;color:#1a2332;line-height:1.65;">If you are ready to book, we walk you through the next steps to get your session confirmed.</td>
+                <td style="padding:0 0 0 12px;font-size:14px;color:#1a2332;line-height:1.65;">If you want to go ahead and book, we walk you through exactly how to get your session sorted.</td>
               </tr>
             </table>
           </td></tr>
         </table>
 
+        <p style="margin:0 0 24px;font-size:15px;color:#1a2332;line-height:1.75;">
+          Any questions before then? Just reply to this email and we will get back to you.
+        </p>
         <p style="margin:0;font-size:15px;color:#1a2332;line-height:1.75;">
-          Questions in the meantime? Simply reply to this email and we will get back to you promptly.
+          Talk soon,<br />
+          <strong style="color:#0a1628;">The Shore Academy Team</strong>
         </p>
       </td></tr>
 

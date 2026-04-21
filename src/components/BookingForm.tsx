@@ -208,7 +208,7 @@ export default function BookingForm() {
       const isStudentPrimary = !primaryIsParent && i === 0;
       const studentBookedFor = isStudentPrimary ? primaryBookedFor : "";
       const studentNotes = [
-        `=== ${isStudentPrimary ? "PRIMARY BOOKER — " : ""}STUDENT PROFILE ===`,
+        `=== ${isStudentPrimary ? "PRIMARY BOOKER | " : ""}STUDENT PROFILE ===`,
         `Name: ${s.firstName} ${s.lastName}`,
         `Age: ${s.age}`,
         `Swim Level: ${s.swimLevel}`,
@@ -268,7 +268,7 @@ export default function BookingForm() {
         return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
       }
 
-      const emailSubject = `New Book a Session Lead — ${esc(primaryBookerName)} | Shore Academy`;
+      const emailSubject = `New Book a Session Lead | ${esc(primaryBookerName)} | Shore Academy`;
 
       const studentRowsHtml = students.map((s, i) => `
         <tr><td colspan="2" style="padding:16px 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">
@@ -360,7 +360,7 @@ export default function BookingForm() {
       const primaryFirstName = primaryIsParent ? form.parentFirst : students[0].firstName;
       const bookedForLabel = primaryBookedFor || "your session";
 
-      const confirmationEmailSubject = `Your booking request is in, ${esc(primaryFirstName)} — Shore Academy`;
+      const confirmationEmailSubject = `Your booking request is in, ${esc(primaryFirstName)} | Shore Academy`;
 
       const confirmationEmailHtml = `<!DOCTYPE html>
 <html>
@@ -379,9 +379,9 @@ export default function BookingForm() {
 
       <!-- Body -->
       <tr><td style="background:#ffffff;padding:40px 40px 32px;">
-        <h1 style="margin:0 0 18px;font-size:26px;font-weight:700;color:#0a1628;line-height:1.3;">Your booking request is in, ${esc(primaryFirstName)}.</h1>
+        <h1 style="margin:0 0 18px;font-size:26px;font-weight:700;color:#0a1628;line-height:1.3;">Got it, ${esc(primaryFirstName)}. Your request is in.</h1>
         <p style="margin:0 0 24px;font-size:16px;color:#1a2332;line-height:1.75;">
-          Thank you for submitting your booking request. We have everything we need and a member of our team will be in touch within <strong style="color:#e05c3a;">24 hours</strong> to confirm the details and get your session locked in.
+          Thanks for sending over your booking request. We have got everything we need and someone from our team will be in touch within <strong style="color:#e05c3a;">24 hours</strong> to go over the details and get your session confirmed.
         </p>
 
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
@@ -416,26 +416,30 @@ export default function BookingForm() {
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
                   <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">1</div>
                 </td>
-                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">A team member calls you to discuss each student's swim level, readiness, and confirm your preferred session date and location.</td>
+                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">Someone from the team gives you a call to go over each student's swim level, confirm the date and location, and make sure everything is a good fit.</td>
               </tr>
               <tr>
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
                   <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">2</div>
                 </td>
-                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">Once confirmed, a <strong>$50 deposit</strong> secures your spot. The remaining balance is due before your first session.</td>
+                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">Once everything looks good, a <strong>$50 deposit</strong> locks in your spot. The rest is due before your first session.</td>
               </tr>
               <tr>
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
                   <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">3</div>
                 </td>
-                <td style="padding:0 0 0 12px;font-size:14px;color:#1a2332;line-height:1.65;">Show up 15 minutes early with swimwear, reef-safe sunscreen, and water. We handle everything else.</td>
+                <td style="padding:0 0 0 12px;font-size:14px;color:#1a2332;line-height:1.65;">Show up 15 minutes early with swimwear, reef-safe sunscreen, and water. We sort everything else.</td>
               </tr>
             </table>
           </td></tr>
         </table>
 
+        <p style="margin:0 0 24px;font-size:15px;color:#1a2332;line-height:1.75;">
+          Any questions before then? Just reply to this email and we will get back to you.
+        </p>
         <p style="margin:0;font-size:15px;color:#1a2332;line-height:1.75;">
-          Questions in the meantime? Simply reply to this email and we will get back to you promptly.
+          Talk soon,<br />
+          <strong style="color:#0a1628;">The Shore Academy Team</strong>
         </p>
       </td></tr>
 
@@ -577,7 +581,7 @@ export default function BookingForm() {
                   <p style={{ margin: "0 0 0 36px", fontSize: 12, color: "var(--text-light)", lineHeight: 1.5 }}>
                     {showParent
                       ? "The first student being booked. Your own details go in the Parent / Guardian section below."
-                      : "You are making this booking — your details go here. We will send the confirmation to your email."}
+                      : "You are making this booking. Your details go here and we will send the confirmation to your email."}
                   </p>
                 </div>
               ) : numStudents > 1 && (
