@@ -44,10 +44,24 @@ interface StudentInfo {
   email: string;
   phone: string;
   medical: string;
+  allergies: string;
+  emergencyContact: string;
+  emergencyPhone: string;
 }
 
 function defaultStudent(): StudentInfo {
-  return { firstName: "", lastName: "", age: "", swimLevel: "", email: "", phone: "", medical: "" };
+  return {
+    firstName: "",
+    lastName: "",
+    age: "",
+    swimLevel: "",
+    email: "",
+    phone: "",
+    medical: "",
+    allergies: "",
+    emergencyContact: "",
+    emergencyPhone: "",
+  };
 }
 
 export default function BookingForm() {
@@ -58,11 +72,13 @@ export default function BookingForm() {
     preferredDate: "",
     preferredTime: TIMES[0],
     package: "",
+    location: "",
     additionalNotes: "",
     parentFirst: "",
     parentLast: "",
     parentEmail: "",
     parentPhone: "",
+    parentRelationship: "",
     waiverAgreed: false,
     prereqConfirmed: false,
     photoConsent: true,
@@ -94,32 +110,108 @@ export default function BookingForm() {
     e.preventDefault();
     setSubmitting(true);
     setError("");
+
+    const contactFirst = showParent ? form.parentFirst : students[0].firstName;
+    const contactLast = showParent ? form.parentLast : students[0].lastName;
+    const contactEmail = showParent ? form.parentEmail : students[0].email;
+    const contactPhone = showParent ? form.parentPhone : students[0].phone;
+
+    const studentSummary = students.map((s, i) =>
+      [
+        `Student ${i + 1}: ${s.firstName} ${s.lastName}`,
+        `Age: ${s.age}`,
+        `Swim Level: ${s.swimLevel}`,
+        s.medical ? `Medical Conditions: ${s.medical}` : "",
+        s.allergies ? `Allergies: ${s.allergies}` : "",
+        s.emergencyContact ? `Emergency Contact: ${s.emergencyContact} (${s.emergencyPhone})` : "",
+      ].filter(Boolean).join(" | ")
+    ).join("\n");
+
+    const notes = [
+      `=== STUDENTS (${numStudents}) ===`,
+      studentSummary,
+      "",
+      `=== SESSION ===`,
+      `Package: ${form.package}`,
+      `Preferred Date: ${form.preferredDate}`,
+      `Preferred Time: ${form.preferredTime}`,
+      form.location ? `Preferred Location: ${form.location}` : "",
+      "",
+      `=== PARENT/GUARDIAN ===`,
+      showParent ? `Name: ${form.parentFirst} ${form.parentLast}` : "Adult student (18+)",
+      showParent && form.parentRelationship ? `Relationship: ${form.parentRelationship}` : "",
+      "",
+      `=== CONSENTS ===`,
+      `Liability Waiver Agreed: ${form.waiverAgreed ? "YES" : "NO"}`,
+      `Prerequisites Confirmed: ${form.prereqConfirmed ? "YES" : "NO"}`,
+      `Photo/Video Consent: ${form.photoConsent ? "YES" : "NO - OPT OUT"}`,
+      `Call Consultation Acknowledged: ${form.callConsent ? "YES" : "NO"}`,
+      form.additionalNotes ? `\n=== ADDITIONAL NOTES ===\n${form.additionalNotes}` : "",
+    ].filter((l) => l !== undefined && l !== null).join("\n").trim();
+
     try {
-      const payload = {
-        firstName: showParent ? form.parentFirst : students[0].firstName,
-        lastName: showParent ? form.parentLast : students[0].lastName,
-        email: showParent ? form.parentEmail : students[0].email,
-        phone: showParent ? form.parentPhone : students[0].phone,
-        preferredDate: form.preferredDate,
-        preferredTime: form.preferredTime,
-        package: form.package,
-        numStudents,
-        studentInfo: students.map((s, i) => `Student ${i + 1}: ${s.firstName} ${s.lastName}, Age ${s.age}, ${s.swimLevel}`).join(" | "),
-        additionalNotes: form.additionalNotes,
-      };
-      const res = await fetch("/api/ghl-booking", {
+      // 1. Web3Forms — email notification to info@shoreacademy.com
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: "dad22fec-f7dc-4d42-978f-bcc6fcaad397",
+          subject: `New Shore Academy Enrollment — ${contactFirst} ${contactLast} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
+          from_name: "Shore Academy Website",
+          name: `${contactFirst} ${contactLast}`,
+          email: contactEmail,
+          phone: contactPhone,
+          package: form.package,
+          preferred_date: form.preferredDate,
+          preferred_time: form.preferredTime,
+          preferred_location: form.location,
+          num_students: numStudents,
+          message: notes,
+        }),
+      });
+
+      // 2. Make.com webhook — creates GHL contact
+      await fetch("https://hook.us2.make.com/jpmo5faxu2nugc0n83nharapyyoestox", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          // GHL Create Contact fields
+          email: contactEmail,
+          phone: contactPhone,
+          firstName: contactFirst,
+          lastName: contactLast,
+          source: "Website Booking Form",
+          timezone: "America/New_York",
+          tags: ["Shore Academy", "Booking Requested", form.package].filter(Boolean),
+          notes,
+          // Additional data for Make.com mapping
+          package: form.package,
+          preferredDate: form.preferredDate,
+          preferredTime: form.preferredTime,
+          preferredLocation: form.location,
+          numStudents,
+          parentRelationship: form.parentRelationship,
+          students: students.map((s) => ({
+            firstName: s.firstName,
+            lastName: s.lastName,
+            age: s.age,
+            swimLevel: s.swimLevel,
+            medical: s.medical,
+            allergies: s.allergies,
+            emergencyContact: s.emergencyContact,
+            emergencyPhone: s.emergencyPhone,
+          })),
+          consentWaiver: form.waiverAgreed,
+          consentPrereqs: form.prereqConfirmed,
+          consentPhoto: form.photoConsent,
+          consentCall: form.callConsent,
+          additionalNotes: form.additionalNotes,
+        }),
       });
-      const data = await res.json();
-      if (data.success && data.depositUrl) {
-        window.location.href = data.depositUrl;
-      } else {
-        setSubmitted(true);
-      }
+
+      setSubmitted(true);
     } catch {
-      setError("Something went wrong. Please try again or email info@theshoreacademy.com");
+      setError("Something went wrong. Please try again or email info@shoreacademy.com");
     } finally {
       setSubmitting(false);
     }
@@ -144,8 +236,8 @@ export default function BookingForm() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 40 }} className="booking-steps">
         {[
           { num: 1, title: "Fill In This Form", desc: "Session preference, your details, student info, and liability waiver. All in one place." },
-          { num: 2, title: "Pay Your Deposit", desc: "A $50 deposit reserves your spot immediately. Remaining balance is due before your first session." },
-          { num: 3, title: "We Call to Consult", desc: "A member of our team calls to discuss your child's swim level, confirm the location, and make sure they are a good fit." },
+          { num: 2, title: "We Call to Consult", desc: "A member of our team calls to discuss each student's swim level, confirm the location, and make sure they are a good fit." },
+          { num: 3, title: "Pay Your Deposit", desc: "A $50 deposit reserves your spot immediately. Remaining balance is due before your first session." },
           { num: 4, title: "Show Up & Learn", desc: "Arrive 15 minutes early with swimwear, reef-safe sunscreen, and water. We handle everything else." },
         ].map((step) => (
           <div key={step.num} style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: 20, background: "var(--white)", borderRadius: "var(--radius-sm)", boxShadow: "var(--shadow)" }}>
@@ -178,7 +270,7 @@ export default function BookingForm() {
               </select>
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="form-row">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }} className="form-row">
             <div>
               <label style={labelStyle} htmlFor="package">Package <span style={{ color: "var(--coral)" }}>*</span></label>
               <select id="package" required value={form.package} onChange={(e) => setForm({ ...form, package: e.target.value })} style={inputStyle}>
@@ -193,14 +285,34 @@ export default function BookingForm() {
               </select>
             </div>
           </div>
+          <div>
+            <label style={labelStyle} htmlFor="location">Preferred Location</label>
+            <select id="location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} style={inputStyle}>
+              <option value="">No preference / discuss on call</option>
+              <option>West Palm Beach</option>
+              <option>Boca Raton</option>
+              <option>Delray Beach</option>
+              <option>Fort Lauderdale</option>
+              <option>Miami</option>
+            </select>
+          </div>
         </div>
 
         {/* Student Information */}
         <div style={{ marginBottom: 32 }}>
-          <div style={{ fontSize: 16, fontWeight: 700, color: "var(--navy)", marginBottom: 16, paddingBottom: 8, borderBottom: "2px solid var(--ocean)" }}>Student Information</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: "var(--navy)", marginBottom: 4, paddingBottom: 8, borderBottom: "2px solid var(--ocean)" }}>Student Information</div>
+          <p style={{ fontSize: 13, color: "var(--text-light)", marginBottom: 16 }}>Please complete all fields for each student. This helps us tailor instruction and ensure safety.</p>
+
           {students.map((student, idx) => (
-            <div key={idx} style={{ ...(idx > 0 ? { marginTop: 24, paddingTop: 24, borderTop: "1px dashed #dde2e9" } : {}) }}>
-              {numStudents > 1 && <div style={{ fontSize: 13, fontWeight: 700, color: "var(--ocean)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 14 }}>Student {idx + 1}</div>}
+            <div key={idx} style={{ ...(idx > 0 ? { marginTop: 28, paddingTop: 28, borderTop: "1px dashed #dde2e9" } : {}) }}>
+              {numStudents > 1 && (
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ocean)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--ocean)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700 }}>{idx + 1}</div>
+                  Student {idx + 1}
+                </div>
+              )}
+
+              {/* Name */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }} className="form-row">
                 <div>
                   <label style={labelStyle}>First Name <span style={{ color: "var(--coral)" }}>*</span></label>
@@ -211,6 +323,8 @@ export default function BookingForm() {
                   <input type="text" required placeholder="Last name" value={student.lastName} onChange={(e) => updateStudent(idx, "lastName", e.target.value)} style={inputStyle} />
                 </div>
               </div>
+
+              {/* Age + Level */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }} className="form-row">
                 <div>
                   <label style={labelStyle}>Age <span style={{ color: "var(--coral)" }}>*</span></label>
@@ -227,6 +341,8 @@ export default function BookingForm() {
                   </select>
                 </div>
               </div>
+
+              {/* Adult contact fields */}
               {parseInt(student.age) >= 18 && (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }} className="form-row">
                   <div>
@@ -239,15 +355,36 @@ export default function BookingForm() {
                   </div>
                 </div>
               )}
-              <div>
-                <label style={labelStyle}>Medical Conditions or Allergies</label>
-                <input type="text" placeholder="Any conditions or allergies we should know about" value={student.medical} onChange={(e) => updateStudent(idx, "medical", e.target.value)} style={inputStyle} />
+
+              {/* Medical history */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={labelStyle}>Medical Conditions <span style={{ fontSize: 12, fontWeight: 400, color: "var(--text-light)" }}>(heart conditions, seizures, asthma, etc.)</span></label>
+                <input type="text" placeholder="List any medical conditions, or write 'None'" value={student.medical} onChange={(e) => updateStudent(idx, "medical", e.target.value)} style={inputStyle} />
+              </div>
+
+              {/* Allergies */}
+              <div style={{ marginBottom: 16 }}>
+                <label style={labelStyle}>Allergies <span style={{ fontSize: 12, fontWeight: 400, color: "var(--text-light)" }}>(food, marine life, sunscreen, bee stings, etc.)</span></label>
+                <input type="text" placeholder="List any allergies, or write 'None'" value={student.allergies} onChange={(e) => updateStudent(idx, "allergies", e.target.value)} style={inputStyle} />
+              </div>
+
+              {/* Emergency contact */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="form-row">
+                <div>
+                  <label style={labelStyle}>Emergency Contact Name</label>
+                  <input type="text" placeholder="Full name" value={student.emergencyContact} onChange={(e) => updateStudent(idx, "emergencyContact", e.target.value)} style={inputStyle} />
+                </div>
+                <div>
+                  <label style={labelStyle}>Emergency Contact Phone</label>
+                  <input type="tel" placeholder="(555) 000-0000" value={student.emergencyPhone} onChange={(e) => updateStudent(idx, "emergencyPhone", e.target.value)} style={inputStyle} />
+                </div>
               </div>
             </div>
           ))}
-          <div style={{ marginTop: 16 }}>
+
+          <div style={{ marginTop: 20 }}>
             <label style={labelStyle} htmlFor="notes">Additional Notes</label>
-            <textarea id="notes" rows={3} placeholder="Anything else about swimming ability, personality, comfort in water, etc." value={form.additionalNotes} onChange={(e) => setForm({ ...form, additionalNotes: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} />
+            <textarea id="notes" rows={3} placeholder="Anything else about swimming ability, personality, comfort in water, fears, etc." value={form.additionalNotes} onChange={(e) => setForm({ ...form, additionalNotes: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} />
           </div>
         </div>
 
@@ -268,7 +405,7 @@ export default function BookingForm() {
                 <input type="text" id="parent-last" required placeholder="Last name" autoComplete="family-name" value={form.parentLast} onChange={(e) => setForm({ ...form, parentLast: e.target.value })} style={inputStyle} />
               </div>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="form-row">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }} className="form-row">
               <div>
                 <label style={labelStyle} htmlFor="parent-email">Email <span style={{ color: "var(--coral)" }}>*</span></label>
                 <input type="email" id="parent-email" required placeholder="you@email.com" autoComplete="email" value={form.parentEmail} onChange={(e) => setForm({ ...form, parentEmail: e.target.value })} style={inputStyle} />
@@ -277,6 +414,15 @@ export default function BookingForm() {
                 <label style={labelStyle} htmlFor="parent-phone">Phone <span style={{ color: "var(--coral)" }}>*</span></label>
                 <input type="tel" id="parent-phone" required placeholder="(555) 000-0000" autoComplete="tel" value={form.parentPhone} onChange={(e) => setForm({ ...form, parentPhone: e.target.value })} style={inputStyle} />
               </div>
+            </div>
+            <div>
+              <label style={labelStyle} htmlFor="parent-relationship">Relationship to Student(s)</label>
+              <select id="parent-relationship" value={form.parentRelationship} onChange={(e) => setForm({ ...form, parentRelationship: e.target.value })} style={inputStyle}>
+                <option value="">Select relationship...</option>
+                <option>Parent / Legal Guardian</option>
+                <option>Grandparent</option>
+                <option>Other Guardian</option>
+              </select>
             </div>
           </div>
         )}
@@ -322,16 +468,22 @@ export default function BookingForm() {
         {error && <p style={{ color: "var(--coral)", fontSize: 14, marginBottom: 16 }}>{error}</p>}
 
         <button type="submit" disabled={submitting} style={{ width: "100%", padding: "16px", fontSize: 16, fontWeight: 700, background: submitting ? "#aaa" : "var(--coral)", color: "#fff", border: "none", borderRadius: "var(--radius-sm)", cursor: submitting ? "not-allowed" : "pointer", transition: "var(--transition)", letterSpacing: "0.5px", minHeight: 52 }}>
-          {submitting ? "Submitting..." : "Submit Enrollment & Request Your Spot →"}
+          {submitting ? "Submitting..." : "Submit Enrollment Request →"}
         </button>
         <p style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "var(--text-light)" }}>
-          After submitting, you will be directed to pay the $50 deposit to reserve your spot. A team member will then call to consult and confirm readiness. Full refund if we determine the session is not the right fit.
+          After submitting, our team will call to consult and confirm readiness. A $50 deposit will then secure your spot. Full refund if we determine the session is not the right fit.
         </p>
       </form>
 
       <style>{`
-        .booking-steps { @media (max-width:768px) { grid-template-columns: 1fr 1fr !important; } @media (max-width:600px) { grid-template-columns: 1fr !important; } }
-        .form-row { @media (max-width:768px) { grid-template-columns: 1fr !important; } }
+        .booking-steps { }
+        @media (max-width: 768px) {
+          .booking-steps { grid-template-columns: 1fr 1fr !important; }
+          .form-row { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 600px) {
+          .booking-steps { grid-template-columns: 1fr !important; }
+        }
       `}</style>
     </>
   );

@@ -11,6 +11,7 @@ const navLinks = [
   { label: "Pricing", href: "/#pricing" },
   { label: "Locations", href: "/#service-areas" },
   { label: "Academy Resources", href: "/academy-resources" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Nav() {
@@ -45,7 +46,7 @@ export default function Nav() {
       }}
     >
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? 64 : 80, transition: "height 0.3s ease" }}>
-        <Link href="/" aria-label="The Shore Academy — Ocean Safety School" onClick={() => setOpen(false)}>
+        <Link href="/" aria-label="The Shore Academy - Ocean Safety School" onClick={() => setOpen(false)}>
           <Image src="/logo.png" alt="The Shore Academy" width={180} height={72} style={{ height: scrolled ? 52 : 68, width: "auto", transition: "height 0.3s ease", display: "block" }} priority />
         </Link>
 

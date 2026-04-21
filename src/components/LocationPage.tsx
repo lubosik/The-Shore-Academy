@@ -19,11 +19,11 @@ export default function LocationPage({ loc }: { loc: LocationData }) {
   const localBizSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: `The Shore Academy — ${loc.name}`,
+    name: `The Shore Academy - ${loc.name}`,
     description: loc.metaDescription,
     url: `https://theshoreacademy.com/locations/${loc.slug}`,
     image: "https://theshoreacademy.com/hero-image.png",
-    email: "info@theshoreacademy.com",
+    email: "info@shoreacademy.com",
     address: {
       "@type": "PostalAddress",
       addressLocality: loc.name,
@@ -155,7 +155,7 @@ export default function LocationPage({ loc }: { loc: LocationData }) {
           <div style={{ maxWidth: 1200, margin: "0 auto" }}>
             <span style={{ display: "inline-block", fontSize: 12, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "var(--ocean)", marginBottom: 12 }}>Questions</span>
             <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, color: "var(--navy)", marginBottom: 40 }}>
-              {loc.name} Ocean Safety — FAQ
+              {loc.name} Ocean Safety - FAQ
             </h2>
             <FaqList faqs={loc.faqs} />
           </div>

@@ -63,7 +63,7 @@ const localBusinessSchema = {
   url: "https://theshoreacademy.com",
   logo: "https://theshoreacademy.com/logo.png",
   image: "https://theshoreacademy.com/hero-image.png",
-  email: "info@theshoreacademy.com",
+  email: "info@shoreacademy.com",
   address: {
     "@type": "PostalAddress",
     addressLocality: "West Palm Beach",
