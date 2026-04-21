@@ -272,7 +272,7 @@ export default function BookingForm() {
 
       const studentRowsHtml = students.map((s, i) => `
         <tr><td colspan="2" style="padding:16px 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">
-          ${numStudents > 1 ? `Student ${i + 1}: ` : ""}${esc(s.firstName)} ${esc(s.lastName)}
+          ${i === 0 && !primaryIsParent ? "Primary Booker: " : i > 0 ? `Student ${i + 1}: ` : "Student: "}${esc(s.firstName)} ${esc(s.lastName)}
         </td></tr>
         <tr>
           <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:160px;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Age</td>
@@ -554,7 +554,19 @@ export default function BookingForm() {
 
           {students.map((student, idx) => (
             <div key={idx} style={{ ...(idx > 0 ? { marginTop: 28, paddingTop: 28, borderTop: "1px dashed #dde2e9" } : {}) }}>
-              {numStudents > 1 && (
+              {idx === 0 ? (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ocean)", textTransform: "uppercase", letterSpacing: "0.8px", display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--ocean)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700 }}>1</div>
+                    Primary Booker
+                  </div>
+                  <p style={{ margin: "0 0 0 36px", fontSize: 12, color: "var(--text-light)", lineHeight: 1.5 }}>
+                    {showParent
+                      ? "The first student being booked. Your own details go in the Parent / Guardian section below."
+                      : "You are making this booking — your details go here. We will send the confirmation to your email."}
+                  </p>
+                </div>
+              ) : numStudents > 1 && (
                 <div style={{ fontSize: 14, fontWeight: 700, color: "var(--ocean)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ width: 28, height: 28, borderRadius: "50%", background: "var(--ocean)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700 }}>{idx + 1}</div>
                   Student {idx + 1}
