@@ -4,11 +4,11 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Contact Us | The Shore Academy — Ocean Safety School South Florida",
   description:
-    "Get in touch with The Shore Academy. Email us at info@shoreacademy.com. Serving West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale with certified ocean safety instruction.",
+    "Get in touch with The Shore Academy. Email us at info@theshoreacademy.com. Serving West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale with certified ocean safety instruction.",
   openGraph: {
     title: "Contact The Shore Academy | Ocean Safety School South Florida",
     description:
-      "Questions about ocean safety sessions, the Junior Lifeguard Program, or pricing? Reach us at info@shoreacademy.com. Serving all of South Florida.",
+      "Questions about ocean safety sessions, the Junior Lifeguard Program, or pricing? Reach us at info@theshoreacademy.com. Serving all of South Florida.",
     type: "website",
   },
 };
@@ -20,7 +20,7 @@ const localBusinessSchema = {
   description:
     "South Florida's only dedicated ocean safety school. Rip current training, wave navigation, and beach safety for children, teens, and adults.",
   url: "https://theshoreacademy.com",
-  email: "info@shoreacademy.com",
+  email: "info@theshoreacademy.com",
   areaServed: [
     { "@type": "City", name: "West Palm Beach", containedIn: { "@type": "State", name: "Florida" } },
     { "@type": "City", name: "Boca Raton", containedIn: { "@type": "State", name: "Florida" } },
@@ -79,8 +79,8 @@ export default function ContactPage() {
                 icon: "✉️",
                 title: "Email Us",
                 body: "The fastest way to reach us for general questions, pricing, or to learn if your child is ready.",
-                link: "mailto:info@shoreacademy.com",
-                linkText: "info@shoreacademy.com",
+                link: "mailto:info@theshoreacademy.com",
+                linkText: "info@theshoreacademy.com",
               },
               {
                 icon: "📅",
@@ -142,7 +142,7 @@ export default function ContactPage() {
               <Link href="/book-a-session" style={{ display: "inline-block", background: "var(--coral)", color: "#fff", fontWeight: 700, fontSize: 16, padding: "14px 32px", borderRadius: 50, textDecoration: "none" }}>
                 Book a Session →
               </Link>
-              <a href="mailto:info@shoreacademy.com" style={{ display: "inline-block", background: "transparent", color: "#fff", fontWeight: 600, fontSize: 16, padding: "14px 32px", borderRadius: 50, textDecoration: "none", border: "2px solid rgba(255,255,255,0.35)" }}>
+              <a href="mailto:info@theshoreacademy.com" style={{ display: "inline-block", background: "transparent", color: "#fff", fontWeight: 600, fontSize: 16, padding: "14px 32px", borderRadius: 50, textDecoration: "none", border: "2px solid rgba(255,255,255,0.35)" }}>
                 Email Us
               </a>
             </div>

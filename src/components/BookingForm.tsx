@@ -150,7 +150,7 @@ export default function BookingForm() {
     ].filter((l) => l !== undefined && l !== null).join("\n").trim();
 
     try {
-      // 1. Web3Forms — email notification to info@shoreacademy.com
+      // 1. Web3Forms — email notification to info@theshoreacademy.com
       await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -211,7 +211,7 @@ export default function BookingForm() {
 
       setSubmitted(true);
     } catch {
-      setError("Something went wrong. Please try again or email info@shoreacademy.com");
+      setError("Something went wrong. Please try again or email info@theshoreacademy.com");
     } finally {
       setSubmitting(false);
     }

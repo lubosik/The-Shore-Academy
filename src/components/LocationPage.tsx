@@ -23,7 +23,7 @@ export default function LocationPage({ loc }: { loc: LocationData }) {
     description: loc.metaDescription,
     url: `https://theshoreacademy.com/locations/${loc.slug}`,
     image: "https://theshoreacademy.com/hero-image.png",
-    email: "info@shoreacademy.com",
+    email: "info@theshoreacademy.com",
     address: {
       "@type": "PostalAddress",
       addressLocality: loc.name,

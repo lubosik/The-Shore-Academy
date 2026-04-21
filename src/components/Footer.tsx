@@ -16,7 +16,7 @@ export default function Footer() {
             The Shore Academy<br />
             West Palm Beach, FL<br />
             Serving: West Palm Beach &bull; Boca Raton &bull; Delray Beach &bull; Miami &bull; Fort Lauderdale<br />
-            <a href="mailto:info@shoreacademy.com" style={{ color: "rgba(255,255,255,0.4)", textDecoration: "none" }} className="hover-footer-link">info@shoreacademy.com</a>
+            <a href="mailto:info@theshoreacademy.com" style={{ color: "rgba(255,255,255,0.4)", textDecoration: "none" }} className="hover-footer-link">info@theshoreacademy.com</a>
           </address>
         </div>
 
@@ -53,7 +53,7 @@ export default function Footer() {
             { label: "TikTok", href: "https://www.tiktok.com/@theshoreacademy", external: true },
             { label: "YouTube", href: "https://www.youtube.com/@theshoreacademy", external: true },
             { label: "Contact Us", href: "/contact", external: false },
-            { label: "Email Us", href: "mailto:info@shoreacademy.com", external: false },
+            { label: "Email Us", href: "mailto:info@theshoreacademy.com", external: false },
             { label: "Google Business Profile", href: "https://g.page/theshoreacademy", external: true },
           ].map((l) => (
             <a key={l.href} href={l.href} target={l.external ? "_blank" : undefined} rel={l.external ? "noopener noreferrer" : undefined}
