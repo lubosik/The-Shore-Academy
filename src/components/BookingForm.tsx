@@ -241,34 +241,46 @@ export default function BookingForm() {
 
     try {
       // 1. Web3Forms - one summary email to info@theshoreacademy.com
-      const emailBody = webhookPayloads.map((p: any) =>
-        p.contactType === "student"
-          ? `STUDENT ${p.studentIndex}: ${p.firstName} ${p.lastName} | Age ${p.age} | ${p.swimLevel}${p.medical !== "None" ? ` | Medical: ${p.medical}` : ""}${p.allergies !== "None" ? ` | Allergies: ${p.allergies}` : ""}`
-          : `PARENT/GUARDIAN: ${p.firstName} ${p.lastName} | ${p.email} | ${p.phone} | ${p.relationship}`
-      ).join("\n");
-
       const primaryContact = showParent
         ? `${form.parentFirst} ${form.parentLast}`
         : `${students[0].firstName} ${students[0].lastName}`;
 
-      await fetch("https://api.web3forms.com/submit", {
+      const emailBody = [
+        `PACKAGE: ${form.package}`,
+        `DATE: ${form.preferredDate} | TIME: ${form.preferredTime}`,
+        form.location ? `LOCATION: ${form.location}` : "",
+        `STUDENTS (${numStudents}):`,
+        ...webhookPayloads.filter((p: any) => p.contactType === "student").map((p: any) =>
+          `  - ${p.firstName} ${p.lastName}, Age ${p.age} | ${p.swimLevel}${p.medical !== "None" ? ` | Medical: ${p.medical}` : ""}${p.allergies !== "None" ? ` | Allergies: ${p.allergies}` : ""}${p.emergencyContactName ? ` | Emergency: ${p.emergencyContactName} ${p.emergencyContactPhone}` : ""}`
+        ),
+        showParent ? `\nPARENT/GUARDIAN: ${form.parentFirst} ${form.parentLast} | ${form.parentEmail} | ${form.parentPhone} | ${form.parentRelationship}` : "",
+        form.additionalNotes ? `\nNOTES: ${form.additionalNotes}` : "",
+        `\nCONSENTS: Waiver=${form.waiverAgreed ? "YES" : "NO"} | Prerequisites=${form.prereqConfirmed ? "YES" : "NO"} | Photo=${form.photoConsent ? "YES" : "OPT OUT"} | Call Acknowledged=${form.callConsent ? "YES" : "NO"}`,
+      ].filter(Boolean).join("\n");
+
+      const w3res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: "dad22fec-f7dc-4d42-978f-bcc6fcaad397",
-          subject: `New Shore Academy Enrollment - ${primaryContact} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
-          from_name: "Shore Academy Website",
+          subject: `New Enrollment: ${primaryContact} - ${form.package || "Package TBD"} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
+          from_name: "Shore Academy Booking Form",
           name: primaryContact,
-          email: showParent ? form.parentEmail : students[0].email,
+          email: showParent ? form.parentEmail : (students[0].email || "not-provided@theshoreacademy.com"),
           phone: showParent ? form.parentPhone : students[0].phone,
           package: form.package,
           preferred_date: form.preferredDate,
           preferred_time: form.preferredTime,
-          preferred_location: form.location,
+          preferred_location: form.location || "No preference",
           num_students: numStudents,
           message: emailBody,
+          redirect: false,
         }),
       });
+      const w3data = await w3res.json();
+      if (!w3data.success) {
+        console.error("Web3Forms error:", w3data);
+      }
 
       // 2. Make.com - one webhook per contact (fires sequentially, each creates one GHL contact)
       for (const payload of webhookPayloads) {
