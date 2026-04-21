@@ -3,6 +3,16 @@ import { useState } from "react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+function calculateAgeEST(dob: string): number {
+  if (!dob) return 0;
+  const nowEST = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const birth = new Date(dob + "T00:00:00");
+  let age = nowEST.getFullYear() - birth.getFullYear();
+  const m = nowEST.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && nowEST.getDate() < birth.getDate())) age--;
+  return Math.max(0, age);
+}
+
 export default function EnquiryForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [form, setForm] = useState({
@@ -11,6 +21,7 @@ export default function EnquiryForm() {
     phone: "",
     topic: "",
     message: "",
+    dateOfBirth: "",
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
@@ -20,8 +31,12 @@ export default function EnquiryForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("submitting");
-    try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+
+    const age = form.dateOfBirth ? calculateAgeEST(form.dateOfBirth) : null;
+
+    // Fire both web3forms (email) and GHL (CRM contact) in parallel
+    const [emailRes, ghlRes] = await Promise.allSettled([
+      fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
@@ -32,15 +47,35 @@ export default function EnquiryForm() {
           email: form.email,
           phone: form.phone || "Not provided",
           topic: form.topic || "General",
+          date_of_birth: form.dateOfBirth || "Not provided",
+          age: age != null ? String(age) : "Not provided",
           message: form.message,
           redirect: false,
         }),
-      });
-      const data = await res.json();
-      setStatus(data.success ? "success" : "error");
-    } catch {
-      setStatus("error");
+      }).then((r) => r.json()),
+
+      fetch("/api/ghl-enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          topic: form.topic,
+          message: form.message,
+          dateOfBirth: form.dateOfBirth,
+          age,
+        }),
+      }).then((r) => r.json()),
+    ]);
+
+    // Succeed as long as the email notification went through
+    const emailOk = emailRes.status === "fulfilled" && emailRes.value?.success;
+    if (ghlRes.status === "rejected" || (ghlRes.status === "fulfilled" && !ghlRes.value?.success)) {
+      console.error("GHL enquiry submission failed:", ghlRes.status === "fulfilled" ? ghlRes.value?.error : ghlRes.reason);
     }
+
+    setStatus(emailOk ? "success" : "error");
   }
 
   const inputStyle: React.CSSProperties = {
@@ -92,44 +127,23 @@ export default function EnquiryForm() {
         </p>
       </div>
 
+      {/* Name + Email */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }} className="enquiry-row">
         <div>
           <label style={labelStyle}>Full Name <span style={{ color: "var(--coral)" }}>*</span></label>
-          <input
-            name="name"
-            type="text"
-            required
-            placeholder="Jane Smith"
-            value={form.name}
-            onChange={handleChange}
-            style={inputStyle}
-          />
+          <input name="name" type="text" required placeholder="Jane Smith" value={form.name} onChange={handleChange} style={inputStyle} />
         </div>
         <div>
           <label style={labelStyle}>Email Address <span style={{ color: "var(--coral)" }}>*</span></label>
-          <input
-            name="email"
-            type="email"
-            required
-            placeholder="jane@example.com"
-            value={form.email}
-            onChange={handleChange}
-            style={inputStyle}
-          />
+          <input name="email" type="email" required placeholder="jane@example.com" value={form.email} onChange={handleChange} style={inputStyle} />
         </div>
       </div>
 
+      {/* Phone + Topic */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }} className="enquiry-row">
         <div>
           <label style={labelStyle}>Phone Number <span style={{ color: "var(--text-light)", fontWeight: 400 }}>(optional)</span></label>
-          <input
-            name="phone"
-            type="tel"
-            placeholder="(561) 555-0000"
-            value={form.phone}
-            onChange={handleChange}
-            style={inputStyle}
-          />
+          <input name="phone" type="tel" placeholder="(561) 555-0000" value={form.phone} onChange={handleChange} style={inputStyle} />
         </div>
         <div>
           <label style={labelStyle}>Topic <span style={{ color: "var(--coral)" }}>*</span></label>
@@ -151,6 +165,27 @@ export default function EnquiryForm() {
         </div>
       </div>
 
+      {/* Date of Birth */}
+      <div style={{ marginBottom: 20 }}>
+        <label style={labelStyle}>
+          Date of Birth <span style={{ color: "var(--text-light)", fontWeight: 400 }}>(optional - helps us match the right program)</span>
+        </label>
+        <input
+          name="dateOfBirth"
+          type="date"
+          value={form.dateOfBirth}
+          onChange={handleChange}
+          max={new Date().toISOString().split("T")[0]}
+          style={{ ...inputStyle, maxWidth: 280 }}
+        />
+        {form.dateOfBirth && (
+          <p style={{ fontSize: 12, color: "var(--teal)", marginTop: 6, fontWeight: 600 }}>
+            Age: {calculateAgeEST(form.dateOfBirth)} years old
+          </p>
+        )}
+      </div>
+
+      {/* Message */}
       <div style={{ marginBottom: 28 }}>
         <label style={labelStyle}>Message <span style={{ color: "var(--coral)" }}>*</span></label>
         <textarea
