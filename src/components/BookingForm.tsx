@@ -364,72 +364,86 @@ export default function BookingForm() {
 
       const confirmationEmailHtml = `<!DOCTYPE html>
 <html>
-<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f1f5f9;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 0;">
+<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f0e6d3;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f0e6d3;padding:32px 16px;">
   <tr><td align="center">
     <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-      <tr><td style="background:#1a3a5c;padding:32px 36px;border-radius:10px 10px 0 0;">
-        <p style="margin:0;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7dd3fc;">The Shore Academy</p>
-        <h1 style="margin:10px 0 0;font-size:24px;font-weight:700;color:#ffffff;line-height:1.3;">Your booking request is confirmed, ${esc(primaryFirstName)}.</h1>
+      <!-- Logo header -->
+      <tr><td style="background:#0a1628;padding:30px 40px;text-align:center;border-radius:12px 12px 0 0;">
+        <img src="https://theshoreacademy.com/logo.png" alt="The Shore Academy" height="52" style="height:52px;width:auto;display:block;margin:0 auto;" />
       </td></tr>
 
-      <tr><td style="background:#ffffff;padding:36px 36px 28px;border-left:1px solid #e2e8f0;border-right:1px solid #e2e8f0;">
-        <p style="margin:0 0 20px;font-size:16px;color:#1a1a2e;line-height:1.7;">
-          Thank you for submitting your booking request. We have everything we need and a member of our team will be in touch within <strong>24 hours</strong> to confirm the details and get your session locked in.
+      <!-- Coral accent bar -->
+      <tr><td style="background:#e05c3a;height:4px;font-size:0;line-height:0;"> </td></tr>
+
+      <!-- Body -->
+      <tr><td style="background:#ffffff;padding:40px 40px 32px;">
+        <h1 style="margin:0 0 18px;font-size:26px;font-weight:700;color:#0a1628;line-height:1.3;">Your booking request is in, ${esc(primaryFirstName)}.</h1>
+        <p style="margin:0 0 24px;font-size:16px;color:#1a2332;line-height:1.75;">
+          Thank you for submitting your booking request. We have everything we need and a member of our team will be in touch within <strong style="color:#e05c3a;">24 hours</strong> to confirm the details and get your session locked in.
         </p>
 
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
           <tr>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;width:160px;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Package</td>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;font-weight:600;">${esc(form.package)}</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;width:160px;font-size:13px;font-weight:700;color:#1a6fa0;vertical-align:top;">Package</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;font-size:15px;color:#0a1628;font-weight:600;">${esc(form.package)}</td>
           </tr>
           <tr>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Preferred date</td>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.preferredDate)}</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;font-size:13px;font-weight:700;color:#1a6fa0;vertical-align:top;">Preferred date</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;font-size:15px;color:#0a1628;">${esc(form.preferredDate)}</td>
           </tr>
           <tr>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Preferred time</td>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.preferredTime)}</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;font-size:13px;font-weight:700;color:#1a6fa0;vertical-align:top;">Preferred time</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;font-size:15px;color:#0a1628;">${esc(form.preferredTime)}</td>
           </tr>
           ${form.location ? `<tr>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Location</td>
-            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.location)}</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;font-size:13px;font-weight:700;color:#1a6fa0;vertical-align:top;">Location</td>
+            <td style="padding:12px 0;border-bottom:1px solid #f0e6d3;font-size:15px;color:#0a1628;">${esc(form.location)}</td>
           </tr>` : ""}
           ${primaryBookedFor ? `<tr>
-            <td style="padding:11px 0;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Booked for</td>
-            <td style="padding:11px 0;font-size:15px;color:#1a1a2e;">${esc(bookedForLabel)}</td>
+            <td style="padding:12px 0;font-size:13px;font-weight:700;color:#1a6fa0;vertical-align:top;">Booked for</td>
+            <td style="padding:12px 0;font-size:15px;color:#0a1628;">${esc(bookedForLabel)}</td>
           </tr>` : ""}
         </table>
 
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;margin-bottom:28px;">
-          <tr><td style="padding:20px 24px;">
-            <p style="margin:0 0 14px;font-size:13px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:1px;">What happens next</p>
+        <!-- What happens next — sand box -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0e6d3;border-radius:10px;margin-bottom:32px;">
+          <tr><td style="padding:24px 28px;">
+            <p style="margin:0 0 18px;font-size:11px;font-weight:700;color:#0a1628;text-transform:uppercase;letter-spacing:2px;">What happens next</p>
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
-                <td style="width:28px;vertical-align:top;padding-top:1px;"><div style="width:22px;height:22px;background:#1a6fa0;border-radius:50%;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:22px;">1</div></td>
-                <td style="padding:0 0 12px 10px;font-size:14px;color:#1a1a2e;line-height:1.6;">A team member calls you to discuss each student's swim level, readiness, and confirm your preferred session date and location.</td>
+                <td style="width:30px;vertical-align:top;padding-top:2px;">
+                  <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">1</div>
+                </td>
+                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">A team member calls you to discuss each student's swim level, readiness, and confirm your preferred session date and location.</td>
               </tr>
               <tr>
-                <td style="width:28px;vertical-align:top;padding-top:1px;"><div style="width:22px;height:22px;background:#1a6fa0;border-radius:50%;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:22px;">2</div></td>
-                <td style="padding:0 0 12px 10px;font-size:14px;color:#1a1a2e;line-height:1.6;">Once everything is confirmed, a <strong>$50 deposit</strong> secures your spot. The remaining balance is due before your first session.</td>
+                <td style="width:30px;vertical-align:top;padding-top:2px;">
+                  <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">2</div>
+                </td>
+                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">Once confirmed, a <strong>$50 deposit</strong> secures your spot. The remaining balance is due before your first session.</td>
               </tr>
               <tr>
-                <td style="width:28px;vertical-align:top;"><div style="width:22px;height:22px;background:#1a6fa0;border-radius:50%;color:#fff;font-size:12px;font-weight:700;text-align:center;line-height:22px;">3</div></td>
-                <td style="padding:0 0 0 10px;font-size:14px;color:#1a1a2e;line-height:1.6;">Show up 15 minutes early with swimwear, reef-safe sunscreen, and water. We handle everything else.</td>
+                <td style="width:30px;vertical-align:top;padding-top:2px;">
+                  <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">3</div>
+                </td>
+                <td style="padding:0 0 0 12px;font-size:14px;color:#1a2332;line-height:1.65;">Show up 15 minutes early with swimwear, reef-safe sunscreen, and water. We handle everything else.</td>
               </tr>
             </table>
           </td></tr>
         </table>
 
-        <p style="margin:0;font-size:15px;color:#1a1a2e;line-height:1.7;">
-          Questions in the meantime? Simply reply to this email and we will get back to you.
+        <p style="margin:0;font-size:15px;color:#1a2332;line-height:1.75;">
+          Questions in the meantime? Simply reply to this email and we will get back to you promptly.
         </p>
       </td></tr>
 
-      <tr><td style="background:#1a3a5c;padding:24px 36px;border-radius:0 0 10px 10px;">
-        <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#ffffff;">The Shore Academy</p>
-        <p style="margin:0;font-size:13px;color:#93c5fd;">info@theshoreacademy.com &middot; South Florida</p>
+      <!-- Footer -->
+      <tr><td style="background:#0a1628;padding:28px 40px;text-align:center;border-radius:0 0 12px 12px;">
+        <img src="https://theshoreacademy.com/logo.png" alt="The Shore Academy" height="36" style="height:36px;width:auto;display:block;margin:0 auto 14px;" />
+        <p style="margin:0 0 6px;font-size:13px;color:#7dd3fc;">info@theshoreacademy.com &middot; South Florida</p>
+        <p style="margin:0;font-size:12px;color:#4a6a8a;">theshoreacademy.com</p>
       </td></tr>
 
     </table>
