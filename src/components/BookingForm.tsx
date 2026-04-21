@@ -240,50 +240,102 @@ export default function BookingForm() {
     }
 
     try {
-      // 1. Web3Forms - one summary email to info@theshoreacademy.com
+      function esc(s: unknown): string {
+        return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
       const primaryContact = showParent
         ? `${form.parentFirst} ${form.parentLast}`
         : `${students[0].firstName} ${students[0].lastName}`;
 
-      const emailBody = [
-        `PACKAGE: ${form.package}`,
-        `DATE: ${form.preferredDate} | TIME: ${form.preferredTime}`,
-        form.location ? `LOCATION: ${form.location}` : "",
-        `STUDENTS (${numStudents}):`,
-        ...webhookPayloads.filter((p: any) => p.contactType === "student").map((p: any) =>
-          `  - ${p.firstName} ${p.lastName}, Age ${p.age} | ${p.swimLevel}${p.medical !== "None" ? ` | Medical: ${p.medical}` : ""}${p.allergies !== "None" ? ` | Allergies: ${p.allergies}` : ""}${p.emergencyContactName ? ` | Emergency: ${p.emergencyContactName} ${p.emergencyContactPhone}` : ""}`
-        ),
-        showParent ? `\nPARENT/GUARDIAN: ${form.parentFirst} ${form.parentLast} | ${form.parentEmail} | ${form.parentPhone} | ${form.parentRelationship}` : "",
-        form.additionalNotes ? `\nNOTES: ${form.additionalNotes}` : "",
-        `\nCONSENTS: Waiver=${form.waiverAgreed ? "YES" : "NO"} | Prerequisites=${form.prereqConfirmed ? "YES" : "NO"} | Photo=${form.photoConsent ? "YES" : "OPT OUT"} | Call Acknowledged=${form.callConsent ? "YES" : "NO"}`,
-      ].filter(Boolean).join("\n");
+      const emailSubject = `New Book a Session Lead — ${esc(primaryContact)} | Shore Academy`;
 
-      const w3res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: "e724933d-b85f-47dd-9c2b-e216f54eb6d8",
-          botcheck: false,
-          subject: `New Enrollment: ${primaryContact} - ${form.package || "Package TBD"} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
-          from_name: "Shore Academy Booking Form",
-          name: primaryContact,
-          email: showParent ? form.parentEmail : (students[0].email || "not-provided@theshoreacademy.com"),
-          phone: showParent ? form.parentPhone : students[0].phone,
-          package: form.package,
-          preferred_date: form.preferredDate,
-          preferred_time: form.preferredTime,
-          preferred_location: form.location || "No preference",
-          num_students: numStudents,
-          message: emailBody,
-          redirect: false,
-        }),
-      });
-      const w3data = await w3res.json();
-      if (!w3data.success) {
-        console.error("Web3Forms error:", w3data);
-      }
+      const studentRowsHtml = students.map((s, i) => `
+        <tr><td colspan="2" style="padding:16px 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">
+          ${numStudents > 1 ? `Student ${i + 1}: ` : ""}${esc(s.firstName)} ${esc(s.lastName)}
+        </td></tr>
+        <tr>
+          <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:160px;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Age</td>
+          <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.age)}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Swim Level</td>
+          <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.swimLevel)}</td>
+        </tr>
+        ${s.medical ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Medical</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#dc2626;">${esc(s.medical)}</td></tr>` : ""}
+        ${s.allergies ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Allergies</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#dc2626;">${esc(s.allergies)}</td></tr>` : ""}
+        ${s.emergencyContact ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Emergency</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.emergencyContact)}${s.emergencyPhone ? ` &middot; ${esc(s.emergencyPhone)}` : ""}</td></tr>` : ""}
+        ${parseInt(s.age) >= 18 ? `<tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Email</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.email)}</td></tr><tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;vertical-align:top;">Phone</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(s.phone)}</td></tr>` : ""}
+      `).join("");
 
-      // 2. Make.com - one webhook per contact (fires sequentially, each creates one GHL contact)
+      const parentSectionHtml = showParent ? `
+        <tr><td colspan="2" style="padding:20px 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">
+          Parent / Guardian
+        </td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:160px;font-size:13px;font-weight:700;color:#64748b;">Name</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.parentFirst)} ${esc(form.parentLast)}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Relationship</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.parentRelationship || "Parent/Guardian")}</td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Email</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;"><a href="mailto:${esc(form.parentEmail)}" style="color:#1a6fa0;">${esc(form.parentEmail)}</a></td></tr>
+        <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Phone</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.parentPhone)}</td></tr>
+      ` : "";
+
+      const emailHtml = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f1f5f9;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;padding:32px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+      <tr><td style="background:#1a3a5c;padding:28px 36px;border-radius:10px 10px 0 0;">
+        <p style="margin:0;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#7dd3fc;">New Lead</p>
+        <h1 style="margin:6px 0 0;font-size:22px;font-weight:700;color:#ffffff;">Book a Session Submission</h1>
+      </td></tr>
+
+      <tr><td style="background:#ffffff;padding:32px 36px;border-left:1px solid #e2e8f0;border-right:1px solid #e2e8f0;">
+        <table width="100%" cellpadding="0" cellspacing="0">
+
+          <tr><td colspan="2" style="padding:0 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">Session Details</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:160px;font-size:13px;font-weight:700;color:#64748b;">Package</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;font-weight:600;">${esc(form.package || "Not selected")}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Preferred Date</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.preferredDate)}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Preferred Time</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.preferredTime)}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Location</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${esc(form.location || "No preference")}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">No. of Students</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${numStudents}</td></tr>
+
+          ${studentRowsHtml}
+          ${parentSectionHtml}
+
+          <tr><td colspan="2" style="padding:20px 0 6px;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;">Consents</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Liability Waiver</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:${form.waiverAgreed ? "#16a34a" : "#dc2626"};">${form.waiverAgreed ? "Agreed" : "NOT agreed"}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Prerequisites</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:${form.prereqConfirmed ? "#16a34a" : "#dc2626"};">${form.prereqConfirmed ? "Confirmed" : "NOT confirmed"}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Photo Consent</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${form.photoConsent ? "Yes" : "Opted out"}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:13px;font-weight:700;color:#64748b;">Call Acknowledged</td><td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:15px;color:#1a1a2e;">${form.callConsent ? "Yes" : "No"}</td></tr>
+
+          ${form.additionalNotes ? `
+          <tr><td colspan="2" style="padding:20px 0 0;font-size:13px;font-weight:700;color:#1a6fa0;text-transform:uppercase;letter-spacing:1px;">Additional Notes</td></tr>
+          <tr><td colspan="2" style="padding:10px 0;">
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-left:4px solid #1a6fa0;border-radius:6px;padding:14px 16px;font-size:14px;color:#1a1a2e;line-height:1.6;white-space:pre-wrap;">${esc(form.additionalNotes)}</div>
+          </td></tr>` : ""}
+
+        </table>
+      </td></tr>
+
+      <tr><td style="background:#f8fafc;padding:20px 36px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px;text-align:center;">
+        <p style="margin:0;font-size:12px;color:#94a3b8;">Submitted via Shore Academy booking form &middot; Call the lead to confirm session details</p>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+      // Tag the primary contact payload with subject + HTML for the Make.com Gmail module
+      // sendEmailNotification = true only on the first payload so Make.com sends one email per booking
+      const primaryIndex = showParent ? webhookPayloads.length - 1 : 0;
+      (webhookPayloads[primaryIndex] as any).emailSubject = emailSubject;
+      (webhookPayloads[primaryIndex] as any).emailHtml = emailHtml;
+      (webhookPayloads[primaryIndex] as any).sendEmailNotification = true;
+
+      // Make.com - one webhook per contact (fires sequentially, each creates one GHL contact)
       for (const payload of webhookPayloads) {
         await fetch("https://hook.us2.make.com/jpmo5faxu2nugc0n83nharapyyoestox", {
           method: "POST",
