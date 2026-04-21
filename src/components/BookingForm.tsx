@@ -111,103 +111,173 @@ export default function BookingForm() {
     setSubmitting(true);
     setError("");
 
-    const contactFirst = showParent ? form.parentFirst : students[0].firstName;
-    const contactLast = showParent ? form.parentLast : students[0].lastName;
-    const contactEmail = showParent ? form.parentEmail : students[0].email;
-    const contactPhone = showParent ? form.parentPhone : students[0].phone;
+    const sessionInfo = {
+      package: form.package,
+      preferredDate: form.preferredDate,
+      preferredTime: form.preferredTime,
+      preferredLocation: form.location,
+      numStudents,
+    };
 
-    const studentSummary = students.map((s, i) =>
-      [
-        `Student ${i + 1}: ${s.firstName} ${s.lastName}`,
+    const consentInfo = {
+      consentWaiver: form.waiverAgreed,
+      consentPrereqs: form.prereqConfirmed,
+      consentPhoto: form.photoConsent,
+      consentCall: form.callConsent,
+    };
+
+    const consentText = [
+      `Liability Waiver: ${form.waiverAgreed ? "AGREED" : "NO"}`,
+      `Prerequisites Confirmed: ${form.prereqConfirmed ? "YES" : "NO"}`,
+      `Photo/Video Consent: ${form.photoConsent ? "YES" : "OPT OUT"}`,
+      `Call Consultation Acknowledged: ${form.callConsent ? "YES" : "NO"}`,
+    ].join(" | ");
+
+    const parentName = showParent ? `${form.parentFirst} ${form.parentLast}` : "";
+    const studentListSummary = students.map((s) => `${s.firstName} ${s.lastName} (Age ${s.age})`).join(", ");
+
+    // Build one webhook payload per contact — each creates exactly one GHL contact in Make.com
+    const webhookPayloads: object[] = [];
+
+    // One payload per student
+    students.forEach((s, i) => {
+      const isAdult = parseInt(s.age) >= 18;
+      const studentNotes = [
+        `=== STUDENT PROFILE ===`,
+        `Name: ${s.firstName} ${s.lastName}`,
         `Age: ${s.age}`,
         `Swim Level: ${s.swimLevel}`,
-        s.medical ? `Medical Conditions: ${s.medical}` : "",
-        s.allergies ? `Allergies: ${s.allergies}` : "",
+        s.medical ? `Medical Conditions: ${s.medical}` : "Medical Conditions: None",
+        s.allergies ? `Allergies: ${s.allergies}` : "Allergies: None",
         s.emergencyContact ? `Emergency Contact: ${s.emergencyContact} (${s.emergencyPhone})` : "",
-      ].filter(Boolean).join(" | ")
-    ).join("\n");
+        "",
+        `=== SESSION ===`,
+        `Package: ${form.package}`,
+        `Preferred Date: ${form.preferredDate}`,
+        `Preferred Time: ${form.preferredTime}`,
+        form.location ? `Preferred Location: ${form.location}` : "",
+        numStudents > 1 ? `Group Booking: ${numStudents} students total` : "",
+        "",
+        showParent ? `=== PARENT/GUARDIAN ===\nName: ${parentName}\nRelationship: ${form.parentRelationship || "Parent/Guardian"}\nEmail: ${form.parentEmail}\nPhone: ${form.parentPhone}` : "",
+        "",
+        `=== CONSENTS ===`,
+        consentText,
+        form.additionalNotes ? `\n=== ADDITIONAL NOTES ===\n${form.additionalNotes}` : "",
+      ].filter(Boolean).join("\n").trim();
 
-    const notes = [
-      `=== STUDENTS (${numStudents}) ===`,
-      studentSummary,
-      "",
-      `=== SESSION ===`,
-      `Package: ${form.package}`,
-      `Preferred Date: ${form.preferredDate}`,
-      `Preferred Time: ${form.preferredTime}`,
-      form.location ? `Preferred Location: ${form.location}` : "",
-      "",
-      `=== PARENT/GUARDIAN ===`,
-      showParent ? `Name: ${form.parentFirst} ${form.parentLast}` : "Adult student (18+)",
-      showParent && form.parentRelationship ? `Relationship: ${form.parentRelationship}` : "",
-      "",
-      `=== CONSENTS ===`,
-      `Liability Waiver Agreed: ${form.waiverAgreed ? "YES" : "NO"}`,
-      `Prerequisites Confirmed: ${form.prereqConfirmed ? "YES" : "NO"}`,
-      `Photo/Video Consent: ${form.photoConsent ? "YES" : "NO - OPT OUT"}`,
-      `Call Consultation Acknowledged: ${form.callConsent ? "YES" : "NO"}`,
-      form.additionalNotes ? `\n=== ADDITIONAL NOTES ===\n${form.additionalNotes}` : "",
-    ].filter((l) => l !== undefined && l !== null).join("\n").trim();
+      webhookPayloads.push({
+        // — GHL Create Contact fields —
+        contactType: "student",
+        firstName: s.firstName,
+        lastName: s.lastName,
+        email: isAdult ? s.email : "",
+        phone: isAdult ? s.phone : "",
+        source: "Website Booking Form",
+        timezone: "America/New_York",
+        tags: ["Shore Academy", "Student", "Booking Requested", form.package].filter(Boolean),
+        notes: studentNotes,
+        // — Flat fields for easy Make.com mapping —
+        studentIndex: i + 1,
+        age: s.age,
+        swimLevel: s.swimLevel,
+        medical: s.medical || "None",
+        allergies: s.allergies || "None",
+        emergencyContactName: s.emergencyContact,
+        emergencyContactPhone: s.emergencyPhone,
+        parentGuardianName: showParent ? parentName : "",
+        parentGuardianEmail: showParent ? form.parentEmail : "",
+        parentGuardianPhone: showParent ? form.parentPhone : "",
+        parentRelationship: showParent ? form.parentRelationship : "",
+        ...sessionInfo,
+        ...consentInfo,
+        additionalNotes: form.additionalNotes,
+      });
+    });
+
+    // One payload for parent/guardian (only if any student is under 18)
+    if (showParent) {
+      const parentNotes = [
+        `=== PARENT / GUARDIAN ===`,
+        `Name: ${parentName}`,
+        `Relationship: ${form.parentRelationship || "Parent/Guardian"}`,
+        "",
+        `=== STUDENTS IN THIS BOOKING ===`,
+        students.map((s, i) => [
+          `Student ${i + 1}: ${s.firstName} ${s.lastName} | Age: ${s.age} | Level: ${s.swimLevel}`,
+          s.medical ? `  Medical: ${s.medical}` : "",
+          s.allergies ? `  Allergies: ${s.allergies}` : "",
+        ].filter(Boolean).join("\n")).join("\n"),
+        "",
+        `=== SESSION ===`,
+        `Package: ${form.package}`,
+        `Preferred Date: ${form.preferredDate}`,
+        `Preferred Time: ${form.preferredTime}`,
+        form.location ? `Preferred Location: ${form.location}` : "",
+        "",
+        `=== CONSENTS ===`,
+        consentText,
+        form.additionalNotes ? `\n=== ADDITIONAL NOTES ===\n${form.additionalNotes}` : "",
+      ].filter(Boolean).join("\n").trim();
+
+      webhookPayloads.push({
+        // — GHL Create Contact fields —
+        contactType: "parent_guardian",
+        firstName: form.parentFirst,
+        lastName: form.parentLast,
+        email: form.parentEmail,
+        phone: form.parentPhone,
+        source: "Website Booking Form",
+        timezone: "America/New_York",
+        tags: ["Shore Academy", "Parent/Guardian", "Booking Requested", form.package].filter(Boolean),
+        notes: parentNotes,
+        // — Flat fields for easy Make.com mapping —
+        relationship: form.parentRelationship,
+        studentsInBooking: studentListSummary,
+        ...sessionInfo,
+        ...consentInfo,
+        additionalNotes: form.additionalNotes,
+      });
+    }
 
     try {
-      // 1. Web3Forms — email notification to info@theshoreacademy.com
+      // 1. Web3Forms — one summary email to info@theshoreacademy.com
+      const emailBody = webhookPayloads.map((p: any) =>
+        p.contactType === "student"
+          ? `STUDENT ${p.studentIndex}: ${p.firstName} ${p.lastName} | Age ${p.age} | ${p.swimLevel}${p.medical !== "None" ? ` | Medical: ${p.medical}` : ""}${p.allergies !== "None" ? ` | Allergies: ${p.allergies}` : ""}`
+          : `PARENT/GUARDIAN: ${p.firstName} ${p.lastName} | ${p.email} | ${p.phone} | ${p.relationship}`
+      ).join("\n");
+
+      const primaryContact = showParent
+        ? `${form.parentFirst} ${form.parentLast}`
+        : `${students[0].firstName} ${students[0].lastName}`;
+
       await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: "dad22fec-f7dc-4d42-978f-bcc6fcaad397",
-          subject: `New Shore Academy Enrollment — ${contactFirst} ${contactLast} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
+          subject: `New Shore Academy Enrollment — ${primaryContact} (${numStudents} student${numStudents > 1 ? "s" : ""})`,
           from_name: "Shore Academy Website",
-          name: `${contactFirst} ${contactLast}`,
-          email: contactEmail,
-          phone: contactPhone,
+          name: primaryContact,
+          email: showParent ? form.parentEmail : students[0].email,
+          phone: showParent ? form.parentPhone : students[0].phone,
           package: form.package,
           preferred_date: form.preferredDate,
           preferred_time: form.preferredTime,
           preferred_location: form.location,
           num_students: numStudents,
-          message: notes,
+          message: emailBody,
         }),
       });
 
-      // 2. Make.com webhook — creates GHL contact
-      await fetch("https://hook.us2.make.com/jpmo5faxu2nugc0n83nharapyyoestox", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          // GHL Create Contact fields
-          email: contactEmail,
-          phone: contactPhone,
-          firstName: contactFirst,
-          lastName: contactLast,
-          source: "Website Booking Form",
-          timezone: "America/New_York",
-          tags: ["Shore Academy", "Booking Requested", form.package].filter(Boolean),
-          notes,
-          // Additional data for Make.com mapping
-          package: form.package,
-          preferredDate: form.preferredDate,
-          preferredTime: form.preferredTime,
-          preferredLocation: form.location,
-          numStudents,
-          parentRelationship: form.parentRelationship,
-          students: students.map((s) => ({
-            firstName: s.firstName,
-            lastName: s.lastName,
-            age: s.age,
-            swimLevel: s.swimLevel,
-            medical: s.medical,
-            allergies: s.allergies,
-            emergencyContact: s.emergencyContact,
-            emergencyPhone: s.emergencyPhone,
-          })),
-          consentWaiver: form.waiverAgreed,
-          consentPrereqs: form.prereqConfirmed,
-          consentPhoto: form.photoConsent,
-          consentCall: form.callConsent,
-          additionalNotes: form.additionalNotes,
-        }),
-      });
+      // 2. Make.com — one webhook per contact (fires sequentially, each creates one GHL contact)
+      for (const payload of webhookPayloads) {
+        await fetch("https://hook.us2.make.com/jpmo5faxu2nugc0n83nharapyyoestox", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
       setSubmitted(true);
     } catch {
