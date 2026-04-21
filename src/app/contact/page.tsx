@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import EnquiryForm from "@/components/EnquiryForm";
 
 export const metadata: Metadata = {
   title: "Contact Us | The Shore Academy — Ocean Safety School South Florida",
@@ -128,6 +129,11 @@ export default function ContactPage() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
+          </div>
+
+          {/* Enquiry Form */}
+          <div style={{ marginBottom: 48 }}>
+            <EnquiryForm />
           </div>
 
           {/* CTA */}
