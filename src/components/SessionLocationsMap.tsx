@@ -1,46 +1,116 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+const LeafletMap = dynamic(() => import("./LeafletMap"), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        width: "100%",
+        height: 460,
+        background: "rgba(255,255,255,0.04)",
+        borderRadius: "inherit",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "rgba(255,255,255,0.4)",
+        fontSize: 14,
+        fontWeight: 600,
+        letterSpacing: "0.5px",
+      }}
+    >
+      Loading satellite view...
+    </div>
+  ),
+});
 
 const LOCATIONS = {
   saturday: {
     label: "Saturday",
     name: "Deerfield Beach",
-    day: "Every Saturday",
-    badge: "Saturdays",
-    color: "var(--ocean)",
+    badge: "Every Saturday",
     icon: "🌊",
-    mapEmbedUrl:
-      "https://maps.google.com/maps?q=Deerfield+Beach+Pier+2200+NE+21st+Ave+Deerfield+Beach+FL+33441&t=k&z=17&ie=UTF8&iwloc=&output=embed",
+    accentColor: "#0fa3b1",
+    // Deerfield Beach Pier area — placeholder coordinates (update when exact spot confirmed)
+    center: [26.3183, -80.0799] as [number, number],
+    zoom: 17,
+    markers: [
+      {
+        lat: 26.3175,
+        lng: -80.0810,
+        type: "parking" as const,
+        label: "Parking Area (TBD)",
+        description:
+          "Exact parking spot confirmed during your pre-session consultation. Arrive 15 min early.",
+      },
+      {
+        lat: 26.3183,
+        lng: -80.0791,
+        type: "meeting" as const,
+        label: "Beach Meeting Point (TBD)",
+        description:
+          "Our instructors will be here. Look for The Shore Academy team in coral rash guards.",
+      },
+    ],
+    walkPath: [
+      [26.3175, -80.081],
+      [26.3178, -80.0803],
+      [26.3183, -80.0791],
+    ] as [number, number][],
     directionsUrl:
       "https://www.google.com/maps/dir//Deerfield+Beach+Pier,+2200+NE+21st+Ave,+Deerfield+Beach,+FL+33441",
-    meetingPoint:
-      "Exact meeting point TBD — confirmed during your pre-session consultation call. We will send you a pin the evening before.",
-    parkingInstructions:
-      "Parking details TBD — confirmed when you book. Generally free and metered parking available near the pier. Arrive 15 minutes early so you are not rushed.",
-    address: "Deerfield Beach, FL (exact access point confirmed at booking)",
-    note:
-      "We are finalising our exact Saturday beach access point. Full details — precise pin, parking instructions, and where to stand — will be shared with you when you confirm your session.",
+    note: "Finalising our exact Saturday access point — full details sent the evening before your session.",
+    steps: [
+      { icon: "🅿️", title: "Park up", text: "Exact lot confirmed at booking. Arrive 15 minutes early." },
+      { icon: "🚶", title: "Follow the path", text: "Short walk from parking to the beach access point shown on the map above." },
+      { icon: "📍", title: "Find our team", text: "Look for The Shore Academy instructors in coral rash guards at the meeting point." },
+      { icon: "🌊", title: "Session begins", text: "Instructors brief the group on conditions before entering the water." },
+    ],
   },
   sunday: {
     label: "Sunday",
     name: "Miami Beach",
-    day: "Every Sunday",
-    badge: "Sundays",
-    color: "var(--teal)",
+    badge: "Every Sunday",
     icon: "🏖",
-    mapEmbedUrl:
-      "https://maps.google.com/maps?q=Miami+Beach+FL+33139&t=k&z=15&ie=UTF8&iwloc=&output=embed",
+    accentColor: "#e05c3a",
+    // Miami Beach — placeholder coordinates (update when exact spot confirmed)
+    center: [25.7907, -80.13] as [number, number],
+    zoom: 16,
+    markers: [
+      {
+        lat: 25.7900,
+        lng: -80.1318,
+        type: "parking" as const,
+        label: "Parking Area (TBD)",
+        description:
+          "Exact parking confirmed during your pre-session consultation. Arrive 15 min early.",
+      },
+      {
+        lat: 25.7907,
+        lng: -80.1290,
+        type: "meeting" as const,
+        label: "Beach Meeting Point (TBD)",
+        description:
+          "Our instructors will be here. Look for The Shore Academy team in coral rash guards.",
+      },
+    ],
+    walkPath: [
+      [25.79, -80.1318],
+      [25.7903, -80.131],
+      [25.7907, -80.129],
+    ] as [number, number][],
     directionsUrl: "https://www.google.com/maps/dir//Miami+Beach,+FL+33139",
-    meetingPoint:
-      "Exact meeting point TBD — confirmed during your pre-session consultation call. We will send you a pin the evening before.",
-    parkingInstructions:
-      "Parking details TBD — confirmed when you book. Miami Beach has multiple metered lots and street parking near public beach access points. Arrive 15 minutes early so you are not rushed.",
-    address: "Miami Beach, FL (exact access point confirmed at booking)",
-    note:
-      "We are finalising our exact Sunday beach access point. Full details — precise pin, parking instructions, and where to stand — will be shared with you when you confirm your session.",
+    note: "Finalising our exact Sunday access point — full details sent the evening before your session.",
+    steps: [
+      { icon: "🅿️", title: "Park up", text: "Exact lot confirmed at booking. Arrive 15 minutes early." },
+      { icon: "🚶", title: "Follow the path", text: "Short walk from parking to the beach access point shown on the map above." },
+      { icon: "📍", title: "Find our team", text: "Look for The Shore Academy instructors in coral rash guards at the meeting point." },
+      { icon: "🌊", title: "Session begins", text: "Instructors brief the group on conditions before entering the water." },
+    ],
   },
-};
+} as const;
 
 export default function SessionLocationsMap() {
   const [active, setActive] = useState<"saturday" | "sunday">("saturday");
@@ -50,9 +120,10 @@ export default function SessionLocationsMap() {
     <section
       id="session-locations"
       aria-labelledby="locations-map-title"
-      style={{ padding: "100px 24px", background: "var(--navy)", color: "#fff" }}
+      style={{ padding: "100px 24px", background: "var(--navy)" }}
     >
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+        {/* Header */}
         <span
           style={{
             display: "inline-block",
@@ -64,7 +135,7 @@ export default function SessionLocationsMap() {
             marginBottom: 12,
           }}
         >
-          Where We Meet
+          Location Guide
         </span>
         <h2
           id="locations-map-title"
@@ -76,23 +147,24 @@ export default function SessionLocationsMap() {
             marginBottom: 12,
           }}
         >
-          Fixed Weekly Session Locations
+          Find Us &amp; Where to Park
         </h2>
         <p
           style={{
             fontSize: 17,
-            color: "rgba(255,255,255,0.65)",
-            maxWidth: 680,
+            color: "rgba(255,255,255,0.6)",
+            maxWidth: 640,
             lineHeight: 1.7,
             marginBottom: 40,
           }}
         >
-          Same locations every week so you always know where to go. Exact beach access points,
-          parking pins, and meeting instructions are shared with you when you confirm your session.
+          Satellite walkthrough of our weekly session locations. Click the markers to see
+          parking and meeting point details. Exact pins are confirmed with you the evening before
+          your session.
         </p>
 
         {/* Day tabs */}
-        <div style={{ display: "flex", gap: 12, marginBottom: 36, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 12, marginBottom: 32, flexWrap: "wrap" }}>
           {(["saturday", "sunday"] as const).map((day) => {
             const d = LOCATIONS[day];
             const isActive = active === day;
@@ -100,63 +172,47 @@ export default function SessionLocationsMap() {
               <button
                 key={day}
                 onClick={() => setActive(day)}
+                aria-pressed={isActive}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 10,
                   padding: "12px 28px",
                   borderRadius: 50,
-                  border: isActive ? "2px solid var(--teal)" : "2px solid rgba(255,255,255,0.15)",
-                  background: isActive ? "rgba(15,163,177,0.15)" : "rgba(255,255,255,0.04)",
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.55)",
+                  border: isActive
+                    ? `2px solid ${d.accentColor}`
+                    : "2px solid rgba(255,255,255,0.12)",
+                  background: isActive
+                    ? `rgba(${day === "saturday" ? "15,163,177" : "224,92,58"},0.14)`
+                    : "rgba(255,255,255,0.03)",
+                  color: isActive ? "#fff" : "rgba(255,255,255,0.45)",
                   fontWeight: 700,
                   fontSize: 15,
                   cursor: "pointer",
-                  transition: "all 0.2s",
+                  transition: "all 0.18s",
+                  fontFamily: "inherit",
                 }}
               >
                 <span style={{ fontSize: 18 }}>{d.icon}</span>
                 <span>
                   {d.badge} — {d.name}
                 </span>
-                {isActive && (
-                  <span
-                    style={{
-                      background: "var(--teal)",
-                      color: "#fff",
-                      fontSize: 10,
-                      fontWeight: 800,
-                      padding: "2px 8px",
-                      borderRadius: 20,
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    ACTIVE
-                  </span>
-                )}
               </button>
             );
           })}
         </div>
 
-        {/* Map + Info grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 420px",
-            gap: 32,
-            alignItems: "start",
-          }}
-          className="map-grid"
-        >
+        {/* Map + steps layout */}
+        <div className="map-layout" style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 28, alignItems: "start" }}>
           {/* Map */}
           <div
             style={{
               borderRadius: 16,
               overflow: "hidden",
-              border: "3px solid rgba(15,163,177,0.3)",
-              boxShadow: "0 0 60px rgba(15,163,177,0.12)",
+              border: `2px solid rgba(${active === "saturday" ? "15,163,177" : "224,92,58"},0.3)`,
+              boxShadow: `0 0 60px rgba(${active === "saturday" ? "15,163,177" : "224,92,58"},0.1)`,
               position: "relative",
+              background: "#0a1628",
             }}
           >
             {/* Satellite badge */}
@@ -165,257 +221,129 @@ export default function SessionLocationsMap() {
                 position: "absolute",
                 top: 14,
                 left: 14,
-                zIndex: 10,
-                background: "rgba(10,22,40,0.85)",
+                zIndex: 1000,
+                background: "rgba(10,22,40,0.9)",
                 border: "1px solid rgba(255,255,255,0.15)",
                 borderRadius: 8,
                 padding: "6px 14px",
                 fontSize: 11,
                 fontWeight: 700,
                 color: "var(--teal)",
-                letterSpacing: "1px",
+                letterSpacing: "0.8px",
                 textTransform: "uppercase",
                 backdropFilter: "blur(6px)",
+                pointerEvents: "none",
               }}
             >
-              🛰 Satellite View — {loc.name}
+              🛰 USGS Satellite — {loc.name}
             </div>
-            <iframe
-              src={loc.mapEmbedUrl}
-              width="100%"
-              height="460"
-              style={{ border: 0, display: "block" }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title={`Satellite map of ${loc.name} session location`}
+
+            <LeafletMap
+              key={active}
+              center={loc.center}
+              zoom={loc.zoom}
+              markers={loc.markers as any}
+              walkPath={loc.walkPath as any}
+              locationName={loc.name}
             />
-            {/* Coming soon overlay for exact pin */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                background: "linear-gradient(0deg, rgba(10,22,40,0.92) 0%, transparent 100%)",
-                padding: "28px 20px 18px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                flexWrap: "wrap",
-              }}
-            >
-              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
-                <span style={{ color: "var(--teal)", fontWeight: 700 }}>📍 Exact pin TBD</span> —
-                shared with you the evening before your session
-              </div>
-              <a
-                href={loc.directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "var(--teal)",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: 13,
-                  padding: "8px 18px",
-                  borderRadius: 50,
-                  textDecoration: "none",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Get Directions →
-              </a>
-            </div>
           </div>
 
-          {/* Info panel */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {/* Header card */}
+          {/* Right panel */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {/* Location header */}
             <div
               style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.09)",
                 borderRadius: 14,
-                padding: "24px 24px",
+                padding: "22px 22px",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  marginBottom: 12,
-                }}
-              >
-                <span style={{ fontSize: 28 }}>{loc.icon}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <span style={{ fontSize: 26 }}>{loc.icon}</span>
                 <div>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: "1.5px",
-                      textTransform: "uppercase",
-                      color: "var(--teal)",
-                    }}
-                  >
-                    {loc.badge}
-                  </div>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-playfair), serif",
-                      fontSize: 22,
-                      fontWeight: 700,
-                      color: "#fff",
-                    }}
-                  >
-                    {loc.name}
-                  </div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: loc.accentColor }}>{loc.badge}</div>
+                  <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: 20, fontWeight: 700, color: "#fff" }}>{loc.name}</div>
                 </div>
               </div>
-              <p
-                style={{
-                  fontSize: 13,
-                  color: "rgba(255,255,255,0.55)",
-                  lineHeight: 1.6,
-                  borderTop: "1px solid rgba(255,255,255,0.08)",
-                  paddingTop: 12,
-                  marginTop: 4,
-                }}
-              >
+              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, borderTop: "1px solid rgba(255,255,255,0.07)", paddingTop: 10 }}>
                 {loc.note}
               </p>
             </div>
 
-            {/* Meeting Point */}
+            {/* Step-by-step walkthrough */}
             <div
               style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 12,
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                borderRadius: 14,
                 padding: "20px 20px",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 8,
-                }}
-              >
-                <span style={{ fontSize: 20 }}>📍</span>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "1px",
-                    textTransform: "uppercase",
-                    color: "var(--teal)",
-                  }}
-                >
-                  Meeting Point
-                </span>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: 16 }}>
+                On the day
               </div>
-              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.6 }}>
-                {loc.meetingPoint}
-              </p>
-            </div>
-
-            {/* Parking */}
-            <div
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 12,
-                padding: "20px 20px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 8,
-                }}
-              >
-                <span style={{ fontSize: 20 }}>🅿️</span>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "1px",
-                    textTransform: "uppercase",
-                    color: "var(--teal)",
-                  }}
-                >
-                  Parking
-                </span>
+              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                {loc.steps.map((step, i) => (
+                  <div key={i} style={{ display: "flex", gap: 14, position: "relative", paddingBottom: i < loc.steps.length - 1 ? 18 : 0 }}>
+                    {/* Connector line */}
+                    {i < loc.steps.length - 1 && (
+                      <div style={{ position: "absolute", left: 19, top: 40, width: 2, height: "calc(100% - 24px)", background: "rgba(255,255,255,0.07)", borderRadius: 1 }} />
+                    )}
+                    <div style={{ width: 38, height: 38, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>
+                      {step.icon}
+                    </div>
+                    <div style={{ paddingTop: 6 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 3 }}>{step.title}</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", lineHeight: 1.55 }}>{step.text}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.6 }}>
-                {loc.parkingInstructions}
-              </p>
             </div>
 
             {/* What to bring */}
             <div
               style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 12,
-                padding: "20px 20px",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                borderRadius: 14,
+                padding: "18px 20px",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 10,
-                }}
-              >
-                <span style={{ fontSize: 20 }}>🎒</span>
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "1px",
-                    textTransform: "uppercase",
-                    color: "var(--teal)",
-                  }}
-                >
-                  What to Bring
-                </span>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: 12 }}>
+                🎒 What to bring
               </div>
-              <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
-                {[
-                  "Swimwear (rash guard recommended)",
-                  "Reef-safe sunscreen",
-                  "Water bottle",
-                  "Towel",
-                  "Arrive 15 minutes early",
-                ].map((item) => (
-                  <li
-                    key={item}
-                    style={{
-                      fontSize: 13,
-                      color: "rgba(255,255,255,0.65)",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    <span style={{ color: "var(--teal)", fontWeight: 700, fontSize: 10 }}>✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              {["Swimwear (rash guard recommended)", "Reef-safe sunscreen", "Water bottle", "Towel"].map((item) => (
+                <div key={item} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
+                  <span style={{ color: "var(--teal)", fontWeight: 800, fontSize: 10 }}>✓</span>
+                  <span style={{ fontSize: 13, color: "rgba(255,255,255,0.6)" }}>{item}</span>
+                </div>
+              ))}
             </div>
 
+            <a
+              href={loc.directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                padding: "13px 20px",
+                borderRadius: 50,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.8)",
+                fontWeight: 600,
+                fontSize: 13,
+                textDecoration: "none",
+                textAlign: "center",
+              }}
+            >
+              Open in Google Maps →
+            </a>
             <a
               href="/book-a-session"
               style={{
@@ -423,17 +351,17 @@ export default function SessionLocationsMap() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 8,
+                padding: "14px 20px",
+                borderRadius: 50,
                 background: "var(--coral)",
                 color: "#fff",
                 fontWeight: 700,
-                fontSize: 15,
-                padding: "15px 24px",
-                borderRadius: 50,
+                fontSize: 14,
                 textDecoration: "none",
                 textAlign: "center",
               }}
             >
-              Book Your {loc.badge} Session →
+              Book Your {loc.label} Session →
             </a>
           </div>
         </div>
@@ -441,7 +369,7 @@ export default function SessionLocationsMap() {
 
       <style>{`
         @media (max-width: 900px) {
-          .map-grid { grid-template-columns: 1fr !important; }
+          .map-layout { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>
