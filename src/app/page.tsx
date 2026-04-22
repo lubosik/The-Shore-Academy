@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import BookingForm from "@/components/BookingForm";
 import FaqList from "@/components/FaqList";
+import SessionLocationsMap from "@/components/SessionLocationsMap";
 
 export const metadata: Metadata = {
   title: "Ocean Safety School South Florida | Rip Current Training for All Ages | The Shore Academy",
@@ -15,7 +16,7 @@ const faqSchema = {
   "@type": "FAQPage",
   mainEntity: [
     { "@type": "Question", name: "Do you need to already know how to swim to join The Shore Academy?", acceptedAnswer: { "@type": "Answer", text: "Yes, absolutely. The Shore Academy is an ocean navigation and safety program for anyone who already swims independently. Every student must be able to swim confidently in a pool, tread water comfortably, and be at ease in water over their head." } },
-    { "@type": "Question", name: "Where are ocean safety sessions held?", acceptedAnswer: { "@type": "Answer", text: "We operate on Atlantic Ocean beaches across South Florida, serving West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale. The exact beach location is confirmed during your pre-session phone consultation." } },
+    { "@type": "Question", name: "Where are ocean safety sessions held?", acceptedAnswer: { "@type": "Answer", text: "Sessions run on a fixed weekly schedule: Saturdays at Deerfield Beach and Sundays at Miami Beach. The exact beach access point and parking instructions are confirmed during your pre-session phone consultation." } },
     { "@type": "Question", name: "Do you work with adults and teenagers, not just kids?", acceptedAnswer: { "@type": "Answer", text: "Yes - The Shore Academy is for everyone, not just children. Group ocean safety sessions are open to anyone ages 6 and up who already swims: kids, teenagers, and adults alike." } },
     { "@type": "Question", name: "How do I escape a rip current?", acceptedAnswer: { "@type": "Answer", text: "Never swim directly against a rip current - it will exhaust you. Swim parallel to shore until you are out of the current, then angle back to the beach at a diagonal. If you cannot escape, float, conserve energy, and signal for help." } },
     { "@type": "Question", name: "What is the Junior Lifeguard Program in Florida?", acceptedAnswer: { "@type": "Answer", text: "Our Junior Lifeguard Program is a quarterly, 4-week intensive for elite-level swimmers who want to train toward becoming certified ocean lifeguards. It runs on Saturdays and covers intensive physical training, expert rescue skills, USLA lifeguard competition prep, and real-world certification readiness." } },
@@ -30,7 +31,8 @@ const FAQS = [
   { q: "What happens during the pre-session phone consultation?", a: "One of our coaches calls you to discuss your child's swimming background, comfort level in the ocean, personality, any fears or concerns, medical conditions, and what to expect. This helps us tailor instruction and confirm the beach location for your session." },
   { q: "What if you determine my child isn't ready for ocean instruction?", a: "Safety first. If during our consultation or initial beach assessment we determine your child isn't ready, we will provide a full deposit refund and recommend pool programs to build their foundation. We want every student to succeed, and sometimes that means building a stronger base first." },
   { q: "What is the Junior Lifeguard Program in Florida?", a: "Our Junior Lifeguard Program is a quarterly, 4-week intensive for elite-level swimmers who want to train toward becoming certified ocean lifeguards. It runs on Saturdays and covers intensive physical training, expert rescue skills, USLA lifeguard competition prep, and real-world certification readiness. Graduates are prepared to pass ocean lifeguard tests nationwide. Cohorts are limited to 6 students." },
-  { q: "What happens in bad weather?", a: "We monitor conditions closely. If ocean conditions are unsafe (red flags, lightning, severe storms), we will reschedule your session at no charge. Light rain and moderate surf are part of the ocean experience and sessions may still proceed. We communicate any changes via text and email the morning of your session." },
+  { q: "What is your cancellation and refund policy?", a: "Full payment is required upfront to reserve your spot. A $50 cancellation fee applies if you cancel within 24 hours of your scheduled session. There are no refunds for no-shows — if you do not show up for your session without cancelling in advance, the full session fee is forfeited. Full refund is issued if we determine during our pre-session consultation that a student is not yet ready for ocean instruction." },
+  { q: "What happens in bad weather?", a: "We monitor conditions closely. If ocean conditions are unsafe (red flags, lightning, severe storms), we will reschedule your session at no charge. Light rain and moderate surf are part of the ocean experience and sessions may still proceed. We communicate any changes via text and email the morning of your session. Weather-related reschedules are not subject to cancellation fees." },
 ];
 
 export default function HomePage() {
@@ -44,7 +46,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "120px 24px 80px", position: "relative", zIndex: 2, width: "100%" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 50, padding: "8px 20px", marginBottom: 32, fontSize: 12, color: "rgba(255,255,255,0.85)", fontWeight: 600, letterSpacing: "0.8px", textTransform: "uppercase" }}>
             <span className="pulse-dot" style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--teal)", display: "inline-block" }} />
-            Now Enrolling - West Palm Beach &bull; Boca Raton &bull; Delray Beach &bull; Miami &bull; Fort Lauderdale
+            Now Enrolling &mdash; Saturdays: Deerfield Beach &bull; Sundays: Miami Beach
           </div>
           <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(42px, 6vw, 80px)", fontWeight: 700, color: "#fff", lineHeight: 1.1, marginBottom: 24, letterSpacing: "-1px" }}>
             Respect the Water.<br />
@@ -284,8 +286,10 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginTop: 24, padding: 16, background: "rgba(26,111,160,0.06)", borderRadius: "var(--radius-sm)" }}>
-            <p style={{ fontSize: 13, color: "var(--text-light)" }}><strong style={{ color: "var(--ocean)" }}>$50 deposit required to reserve your spot.</strong> Deposit is applied to your session total. Remaining balance due before your first session. Full refund if we determine your child is not yet ready during our pre-session consultation.</p>
+          <div style={{ textAlign: "center", marginTop: 24, padding: 20, background: "rgba(26,111,160,0.06)", borderRadius: "var(--radius-sm)", border: "1px solid rgba(26,111,160,0.1)" }}>
+            <p style={{ fontSize: 13, color: "var(--text-light)", lineHeight: 1.7 }}>
+              <strong style={{ color: "var(--ocean)" }}>Full payment required upfront to reserve your spot.</strong> A <strong style={{ color: "var(--coral)" }}>$50 cancellation fee</strong> applies if you cancel within 24 hours of your scheduled session. <strong style={{ color: "var(--coral)" }}>No refunds for no-shows.</strong> Full refund if we determine your child is not ready during the pre-session consultation.
+            </p>
           </div>
         </div>
       </section>
@@ -351,15 +355,36 @@ export default function HomePage() {
       <section id="service-areas" aria-labelledby="areas-title" style={{ padding: "100px 24px", background: "var(--white)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <span className="section-label">Where We Operate</span>
-          <h2 id="areas-title" className="section-title">Ocean Safety Sessions Across South Florida</h2>
-          <p className="section-desc">The Shore Academy serves families across the entire South Florida coastline. Weekend sessions run year-round on the Atlantic Ocean beaches from Miami to Palm Beach County.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginTop: 50 }} className="three-col-grid">
+          <h2 id="areas-title" className="section-title">Fixed Weekly Sessions — Same Locations Every Week</h2>
+          <p className="section-desc">The Shore Academy operates on a consistent weekly schedule so you always know where to go. Sessions run year-round on the Atlantic Ocean beaches of South Florida.</p>
+
+          {/* Weekly schedule highlight */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 40, marginBottom: 56 }} className="schedule-grid">
+            <div style={{ background: "linear-gradient(135deg, var(--navy), #0d2040)", borderRadius: "var(--radius)", padding: "32px 28px", color: "#fff", border: "2px solid rgba(15,163,177,0.25)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, right: 0, width: 120, height: 120, background: "radial-gradient(circle, rgba(15,163,177,0.12), transparent)", borderRadius: "50%" }} aria-hidden="true" />
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(15,163,177,0.15)", border: "1px solid rgba(15,163,177,0.3)", borderRadius: 50, padding: "6px 16px", fontSize: 11, fontWeight: 700, color: "var(--teal)", letterSpacing: "1px", textTransform: "uppercase", marginBottom: 16 }}>Every Saturday</div>
+              <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 8 }}>Deerfield Beach</h3>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, marginBottom: 16 }}>Our fixed Saturday location on Broward County's Atlantic coastline. Same spot every week — easy to find, easy to return to.</p>
+              <div style={{ fontSize: 12, color: "var(--teal)", fontWeight: 600 }}>📍 Exact access point confirmed at booking</div>
+            </div>
+            <div style={{ background: "linear-gradient(135deg, #0a1a2e, #0d2040)", borderRadius: "var(--radius)", padding: "32px 28px", color: "#fff", border: "2px solid rgba(15,163,177,0.15)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, right: 0, width: 120, height: 120, background: "radial-gradient(circle, rgba(224,92,58,0.08), transparent)", borderRadius: "50%" }} aria-hidden="true" />
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(224,92,58,0.12)", border: "1px solid rgba(224,92,58,0.25)", borderRadius: 50, padding: "6px 16px", fontSize: 11, fontWeight: 700, color: "var(--coral)", letterSpacing: "1px", textTransform: "uppercase", marginBottom: 16 }}>Every Sunday</div>
+              <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 8 }}>Miami Beach</h3>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, marginBottom: 16 }}>Our fixed Sunday location on Miami-Dade's iconic Atlantic shoreline. World-class ocean conditions for real ocean safety education.</p>
+              <div style={{ fontSize: 12, color: "var(--coral)", fontWeight: 600 }}>📍 Exact access point confirmed at booking</div>
+            </div>
+          </div>
+
+          <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 28, fontWeight: 700, color: "var(--navy)", marginBottom: 8 }}>South Florida Service Area</h3>
+          <p style={{ fontSize: 15, color: "var(--text-light)", lineHeight: 1.7, marginBottom: 32, maxWidth: 680 }}>Families travel to our fixed weekly locations from across the South Florida coastline. Explore our location guides for ocean safety tips specific to your area.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="three-col-grid">
             {[
-              { title: "West Palm Beach", text: "Ocean safety sessions, junior lifeguard training, and rip current education on the beautiful beaches of West Palm Beach and Palm Beach Island.", beaches: "Beaches: Phipps Ocean Park • Lake Worth Beach area", href: "/locations/west-palm-beach" },
-              { title: "Boca Raton", text: "Kids ocean safety classes and junior lifeguard programs on Boca Raton's crystal-clear Atlantic beaches. Weekend sessions available throughout the year.", beaches: "Beaches: South Beach Park • Red Reef Park • Spanish River Park", href: "/locations/boca-raton" },
-              { title: "Delray Beach", text: "Ocean navigation and wave safety instruction on Delray Beach's award-winning shoreline. Conveniently located for families across South Palm Beach County.", beaches: "Beaches: Delray Municipal Beach • Atlantic Dunes Park", href: "/locations/delray-beach" },
-              { title: "Miami", text: "Ocean safety education and junior lifeguard training on Miami's world-famous Atlantic beaches. Sessions serve families throughout Miami-Dade County and surrounding areas.", beaches: "Beaches: Miami Beach • Crandon Park Beach • Haulover Beach", href: "/locations/miami" },
-              { title: "Fort Lauderdale", text: "Rip current training, wave navigation, and ocean safety programs on Fort Lauderdale's stunning Broward County beaches. Weekend sessions for families throughout the Fort Lauderdale area.", beaches: "Beaches: Fort Lauderdale Beach • Pompano Beach • Deerfield Beach", href: "/locations/fort-lauderdale" },
+              { title: "West Palm Beach", text: "Ocean safety sessions and junior lifeguard training for families across West Palm Beach and Palm Beach County.", beaches: "Beaches: Phipps Ocean Park • Lake Worth Beach area", href: "/locations/west-palm-beach" },
+              { title: "Boca Raton", text: "Kids ocean safety classes for families across Boca Raton and surrounding Broward and Palm Beach communities.", beaches: "Beaches: South Beach Park • Red Reef Park • Deerfield Beach", href: "/locations/boca-raton" },
+              { title: "Delray Beach", text: "Ocean navigation and wave safety instruction for families across South Palm Beach County.", beaches: "Beaches: Delray Municipal Beach • Atlantic Dunes Park", href: "/locations/delray-beach" },
+              { title: "Miami", text: "Ocean safety education for families across Miami-Dade County on Miami Beach's iconic Atlantic shoreline.", beaches: "Beaches: Miami Beach • Crandon Park • Haulover Beach", href: "/locations/miami" },
+              { title: "Fort Lauderdale", text: "Rip current training and ocean safety programs for families across Broward County.", beaches: "Beaches: Fort Lauderdale Beach • Pompano Beach • Deerfield Beach", href: "/locations/fort-lauderdale" },
             ].map((area) => (
               <div key={area.title} className="hover-border-lift" style={{ background: "var(--off-white)", borderRadius: "var(--radius)", padding: "32px 28px", textAlign: "center", border: "2px solid transparent" }}>
                 <div style={{ fontSize: 40, marginBottom: 16 }}>🌊</div>
@@ -372,6 +397,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══ INTERACTIVE MAP ═══ */}
+      <SessionLocationsMap />
 
       {/* ═══ RESOURCES TEASER ═══ */}
       <section id="resources" aria-labelledby="resources-title" style={{ padding: "100px 24px", background: "var(--off-white)" }}>
@@ -406,7 +434,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <span className="section-label">Get Started</span>
           <h2 id="booking-title" className="section-title">Book Your Ocean Safety Session</h2>
-          <p className="section-desc">Fill in the form, pay your deposit to reserve your spot, and our team will call to make sure your child is ready. Serving West Palm Beach, Boca Raton, Delray Beach, Miami & Fort Lauderdale.</p>
+          <p className="section-desc">Fill in the form and our team will call to confirm readiness. Full payment secures your spot. Sessions run Saturdays in Deerfield Beach and Sundays in Miami Beach.</p>
           <div style={{ marginTop: 40 }}>
             <BookingForm />
           </div>
@@ -435,6 +463,8 @@ export default function HomePage() {
       </section>
 
       <style>{`
+        .schedule-grid { }
+        @media (max-width: 640px) { .schedule-grid { grid-template-columns: 1fr !important; } }
         .section-label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ocean); margin-bottom: 12px; }
         .section-title { font-family: var(--font-playfair), serif; font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: var(--navy); margin-bottom: 16px; }
         .section-desc { font-size: 17px; color: var(--text-light); max-width: 680px; line-height: 1.7; margin-bottom: 0; }

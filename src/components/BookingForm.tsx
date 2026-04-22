@@ -422,7 +422,7 @@ export default function BookingForm() {
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
                   <div style="width:24px;height:24px;background:#e05c3a;border-radius:50%;color:#fff;font-size:11px;font-weight:700;text-align:center;line-height:24px;">2</div>
                 </td>
-                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">Once everything looks good, a <strong>$50 deposit</strong> locks in your spot. The rest is due before your first session.</td>
+                <td style="padding:0 0 14px 12px;font-size:14px;color:#1a2332;line-height:1.65;">Once everything looks good, <strong>full payment</strong> locks in your spot. Please note: a $50 cancellation fee applies if you cancel within 24 hours of your session, and there are no refunds for no-shows.</td>
               </tr>
               <tr>
                 <td style="width:30px;vertical-align:top;padding-top:2px;">
@@ -504,7 +504,7 @@ export default function BookingForm() {
         {[
           { num: 1, title: "Fill In This Form", desc: "Session preference, your details, student info, and liability waiver. All in one place." },
           { num: 2, title: "We Call to Consult", desc: "A member of our team calls to discuss each student's swim level, confirm the location, and make sure they are a good fit." },
-          { num: 3, title: "Pay Your Deposit", desc: "A $50 deposit reserves your spot immediately. Remaining balance is due before your first session." },
+          { num: 3, title: "Pay in Full", desc: "Full payment is required upfront to secure your spot. Sessions run Saturdays at Deerfield Beach and Sundays at Miami Beach." },
           { num: 4, title: "Show Up & Learn", desc: "Arrive 15 minutes early with swimwear, reef-safe sunscreen, and water. We handle everything else." },
         ].map((step) => (
           <div key={step.num} style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: 20, background: "var(--white)", borderRadius: "var(--radius-sm)", boxShadow: "var(--shadow)" }}>
@@ -556,11 +556,8 @@ export default function BookingForm() {
             <label style={labelStyle} htmlFor="location">Preferred Location</label>
             <select id="location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} style={inputStyle}>
               <option value="">No preference / discuss on call</option>
-              <option>West Palm Beach</option>
-              <option>Boca Raton</option>
-              <option>Delray Beach</option>
-              <option>Fort Lauderdale</option>
-              <option>Miami</option>
+              <option>Deerfield Beach (Saturday)</option>
+              <option>Miami Beach (Sunday)</option>
             </select>
           </div>
         </div>
@@ -720,6 +717,8 @@ export default function BookingForm() {
             <p>I authorize The Shore Academy instructors to seek emergency medical treatment for my child if necessary during sessions. I confirm my child is in good physical health and capable of participating in strenuous aquatic activities.</p>
             <h4 style={{ color: "var(--navy)", fontSize: 13, margin: "12px 0 6px", fontWeight: 700 }}>SWIMMING PREREQUISITE ACKNOWLEDGMENT</h4>
             <p>I confirm that my child is a proficient pool swimmer, is comfortable in deep water, and has completed prior swimming instruction. I understand The Shore Academy is an ocean navigation program, not a learn-to-swim program.</p>
+            <h4 style={{ color: "var(--navy)", fontSize: 13, margin: "12px 0 6px", fontWeight: 700 }}>PAYMENT & CANCELLATION POLICY</h4>
+            <p>Full payment is required upfront to reserve your session. A $50 cancellation fee applies if you cancel within 24 hours of your scheduled session. There are no refunds for no-shows — failure to attend a session without prior cancellation results in forfeiture of the full session fee. Weather-related reschedules initiated by The Shore Academy are not subject to cancellation fees.</p>
             <h4 style={{ color: "var(--navy)", fontSize: 13, margin: "12px 0 6px", fontWeight: 700 }}>PHOTOGRAPHY & VIDEO CONSENT</h4>
             <p>I grant The Shore Academy permission to photograph and video record my child during sessions for the purposes of providing session media to families and for marketing/promotional use, unless I opt out below.</p>
           </div>
@@ -749,8 +748,8 @@ export default function BookingForm() {
         <button type="submit" disabled={submitting} style={{ width: "100%", padding: "16px", fontSize: 16, fontWeight: 700, background: submitting ? "#aaa" : "var(--coral)", color: "#fff", border: "none", borderRadius: "var(--radius-sm)", cursor: submitting ? "not-allowed" : "pointer", transition: "var(--transition)", letterSpacing: "0.5px", minHeight: 52 }}>
           {submitting ? "Submitting..." : "Submit Enrollment Request →"}
         </button>
-        <p style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "var(--text-light)" }}>
-          After submitting, our team will call to consult and confirm readiness. A $50 deposit will then secure your spot. Full refund if we determine the session is not the right fit.
+        <p style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "var(--text-light)", lineHeight: 1.6 }}>
+          After submitting, our team will call to confirm readiness. Full payment secures your spot. <strong style={{ color: "var(--coral)" }}>$50 fee for cancellations within 24 hours. No refunds for no-shows.</strong> Full refund if we determine the session is not the right fit.
         </p>
       </form>
 

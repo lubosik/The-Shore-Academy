@@ -4,7 +4,7 @@ import BookingForm from "@/components/BookingForm";
 
 export const metadata: Metadata = {
   title: "Book an Ocean Safety Session | The Shore Academy",
-  description: "Book your ocean safety session with The Shore Academy. West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale. $50 deposit to reserve your spot.",
+  description: "Book your ocean safety session with The Shore Academy. Sessions run Saturdays at Deerfield Beach and Sundays at Miami Beach. Full payment required to reserve your spot.",
 };
 
 export default function BookASessionPage() {
@@ -17,7 +17,7 @@ export default function BookASessionPage() {
             Book Your Ocean Safety Session
           </h1>
           <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.7 }}>
-            Fill in the form, pay your $50 deposit, and our team will call to confirm readiness. Serving West Palm Beach, Boca Raton, Delray Beach, Miami & Fort Lauderdale.
+            Fill in the form and our team will call to confirm readiness. Full payment secures your spot. Sessions run every Saturday at Deerfield Beach and every Sunday at Miami Beach.
           </p>
         </div>
       </section>
