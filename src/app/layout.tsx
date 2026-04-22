@@ -78,9 +78,7 @@ const localBusinessSchema = {
   areaServed: ["West Palm Beach", "Boca Raton", "Delray Beach", "Miami", "Fort Lauderdale"],
   priceRange: "$175–$1499",
   sameAs: [
-    "https://www.instagram.com/theshoreacademy",
-    "https://www.tiktok.com/@theshoreacademy",
-    "https://www.youtube.com/@theshoreacademy",
+    "https://www.linkedin.com/company/the-shore-academy/",
   ],
 };
 

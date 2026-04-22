@@ -1,6 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 
+const LinkedInIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+  </svg>
+);
+
 export default function Footer() {
   return (
     <footer style={{ background: "var(--navy)", padding: "60px 24px 30px", borderTop: "1px solid rgba(255,255,255,0.05)" }} role="contentinfo">
@@ -48,19 +54,19 @@ export default function Footer() {
 
         <div>
           <h4 style={{ fontSize: 13, fontWeight: 700, color: "#fff", textTransform: "uppercase", letterSpacing: 1, marginBottom: 16 }}>Connect</h4>
-          {[
-            { label: "Instagram", href: "https://www.instagram.com/theshoreacademy", external: true },
-            { label: "TikTok", href: "https://www.tiktok.com/@theshoreacademy", external: true },
-            { label: "YouTube", href: "https://www.youtube.com/@theshoreacademy", external: true },
-            { label: "Contact Us", href: "/contact", external: false },
-            { label: "Email Us", href: "mailto:info@theshoreacademy.com", external: false },
-            { label: "Google Business Profile", href: "https://g.page/theshoreacademy", external: true },
-          ].map((l) => (
-            <a key={l.href} href={l.href} target={l.external ? "_blank" : undefined} rel={l.external ? "noopener noreferrer" : undefined}
-              className="hover-footer-link"
-              style={{ display: "block", fontSize: 13, color: "rgba(255,255,255,0.4)", textDecoration: "none", padding: "4px 0" }}
-            >{l.label}</a>
-          ))}
+          <a
+            href="https://www.linkedin.com/company/the-shore-academy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="The Shore Academy on LinkedIn"
+            className="hover-footer-link"
+            style={{ display: "inline-flex", alignItems: "center", color: "rgba(255,255,255,0.4)", textDecoration: "none", marginBottom: 12 }}
+          >
+            <LinkedInIcon />
+          </a>
+          <div>
+            <a href="mailto:info@theshoreacademy.com" className="hover-footer-link" style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>info@theshoreacademy.com</a>
+          </div>
         </div>
       </div>
 
