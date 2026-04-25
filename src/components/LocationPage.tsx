@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BookingForm from "@/components/BookingForm";
 import FaqList from "@/components/FaqList";
+import LocationMapSection from "@/components/LocationMapSection";
 import type { LocationData } from "@/lib/locations";
 
 export function buildLocationMetadata(loc: LocationData): Metadata {
@@ -160,6 +161,17 @@ export default function LocationPage({ loc }: { loc: LocationData }) {
             <FaqList faqs={loc.faqs} />
           </div>
         </section>
+      )}
+
+      {/* Interactive Map */}
+      {loc.mapCenter && loc.mapMarkers && (
+        <LocationMapSection
+          locationName={loc.name}
+          mapCenter={loc.mapCenter}
+          mapZoom={loc.mapZoom}
+          mapMarkers={loc.mapMarkers}
+          mapWalkPath={loc.mapWalkPath}
+        />
       )}
 
       {/* Booking */}

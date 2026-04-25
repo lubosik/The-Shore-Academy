@@ -4,13 +4,13 @@ import { getLocation } from "@/lib/locations";
 import { notFound } from "next/navigation";
 
 export function generateMetadata(): Metadata {
-  const loc = getLocation("boca-raton");
+  const loc = getLocation("deerfield-beach");
   if (!loc) notFound();
   return buildLocationMetadata(loc);
 }
 
 export default function Page() {
-  const loc = getLocation("boca-raton");
+  const loc = getLocation("deerfield-beach");
   if (!loc) notFound();
   return <LocationPage loc={loc} />;
 }
