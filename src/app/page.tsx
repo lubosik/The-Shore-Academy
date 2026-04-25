@@ -8,7 +8,7 @@ import SessionLocationsMap from "@/components/SessionLocationsMap";
 export const metadata: Metadata = {
   title: "Ocean Safety School South Florida | Rip Current Training for All Ages | The Shore Academy",
   description:
-    "The Shore Academy is South Florida's only dedicated ocean safety school. Rip current training, wave navigation, and beach safety for children, teens, and adults in West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale.",
+    "The Shore Academy is South Florida's only dedicated ocean safety school. Rip current training, wave navigation, and beach safety for children, teens, and adults. Sessions every Saturday at Deerfield Beach and every Sunday at Miami Beach.",
 };
 
 const faqSchema = {
@@ -25,7 +25,7 @@ const faqSchema = {
 
 const FAQS = [
   { q: "Do you need to already know how to swim?", a: "Yes, absolutely. The Shore Academy is an ocean navigation and safety program for anyone - children, teenagers, or adults - who already swims independently. Every student must be able to swim confidently in a pool, tread water comfortably, and be at ease in water over their head. If you or your child are still learning to swim, complete pool lessons first and then join us. We are not a learn-to-swim program. We are an ocean mastery program." },
-  { q: "Where are sessions held - West Palm Beach, Boca Raton, Delray Beach, Miami, or Fort Lauderdale?", a: "We operate on the Atlantic Ocean beaches across South Florida, serving West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale. The exact beach location for your session is confirmed during your pre-session phone consultation based on conditions and your location." },
+  { q: "Where are sessions held?", a: "We operate on a fixed weekly schedule: Saturdays at Deerfield Beach and Sundays at Miami Beach. The exact beach access point, parking instructions, and meeting point are confirmed with you the evening before your session." },
   { q: "Do you work with adults and teenagers, not just kids?", a: "Yes - The Shore Academy is for everyone, not just children. Group ocean safety sessions are open to anyone ages 6 and up who already swims: kids, teenagers, and adults alike. Many of our students are adults who spend time on South Florida beaches and want to genuinely understand rip currents, read the surf, and feel safe in the Atlantic. Private 1:1 sessions can accommodate ages 5+ after consultation." },
   { q: "How do I escape a rip current?", a: "Never swim directly against a rip current - it will exhaust you. Swim parallel to shore until you are out of the current, then angle back to the beach at a diagonal. If you cannot escape, float, conserve energy, and signal for help. This is one of the core skills we teach in every Shore Academy session." },
   { q: "What happens during the pre-session phone consultation?", a: "One of our coaches calls you to discuss your child's swimming background, comfort level in the ocean, personality, any fears or concerns, medical conditions, and what to expect. This helps us tailor instruction and confirm the beach location for your session." },
@@ -88,7 +88,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <span className="section-label">Why The Shore Academy</span>
           <h2 id="about-title" className="section-title" style={{ maxWidth: 700 }}>The Only Dedicated Ocean Safety School in South Florida</h2>
-          <p className="section-desc">Every year, hundreds of drownings happen in open water because people don&apos;t understand the ocean. Rip currents alone claim over 100 lives annually in the U.S. We&apos;re changing that - one student at a time in West Palm Beach, Boca Raton, and Delray Beach.</p>
+          <p className="section-desc">Every year, hundreds of drownings happen in open water because people don&apos;t understand the ocean. Rip currents alone claim over 100 lives annually in the U.S. We&apos;re changing that - one student at a time on the Atlantic Ocean beaches of South Florida.</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center", marginTop: 60 }} className="about-grid">
             <div style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "var(--shadow-lg)" }}>
               <Image src="/hero-image.png" alt="Certified ocean lifeguard instructor teaching children ocean safety skills in the Atlantic Ocean surf at a West Palm Beach Florida beach" width={600} height={420} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
@@ -174,7 +174,7 @@ export default function HomePage() {
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           <span className="section-label">Parent Reviews</span>
           <h2 id="testimonials-title" className="section-title">What South Florida Parents Are Saying</h2>
-          <p className="section-desc">Real families from West Palm Beach, Boca Raton, and Delray Beach share their experience at The Shore Academy.</p>
+          <p className="section-desc">Real South Florida families share their experience at The Shore Academy.</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginTop: 50 }} className="three-col-grid">
             {[
               { initial: "S", name: "Sarah M.", location: "West Palm Beach, FL", quote: "My 9-year-old was terrified of waves. After just two sessions with The Shore Academy, she was reading the water and navigating the surf on her own. The 2:1 instructor ratio makes all the difference. Absolutely world-class." },
@@ -376,22 +376,19 @@ export default function HomePage() {
             </div>
           </div>
 
-          <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 28, fontWeight: 700, color: "var(--navy)", marginBottom: 8 }}>South Florida Service Area</h3>
-          <p style={{ fontSize: 15, color: "var(--text-light)", lineHeight: 1.7, marginBottom: 32, maxWidth: 680 }}>Families travel to our fixed weekly locations from across the South Florida coastline. Explore our location guides for ocean safety tips specific to your area.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }} className="three-col-grid">
+          <h3 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 28, fontWeight: 700, color: "var(--navy)", marginBottom: 8 }}>Location Guides</h3>
+          <p style={{ fontSize: 15, color: "var(--text-light)", lineHeight: 1.7, marginBottom: 32, maxWidth: 680 }}>Parking details, meeting points, and ocean safety tips specific to each of our two weekly session locations.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }} className="two-col-grid">
             {[
-              { title: "West Palm Beach", text: "Ocean safety sessions and junior lifeguard training for families across West Palm Beach and Palm Beach County.", beaches: "Beaches: Phipps Ocean Park • Lake Worth Beach area", href: "/locations/west-palm-beach" },
-              { title: "Boca Raton", text: "Kids ocean safety classes for families across Boca Raton and surrounding Broward and Palm Beach communities.", beaches: "Beaches: South Beach Park • Red Reef Park • Deerfield Beach", href: "/locations/boca-raton" },
-              { title: "Delray Beach", text: "Ocean navigation and wave safety instruction for families across South Palm Beach County.", beaches: "Beaches: Delray Municipal Beach • Atlantic Dunes Park", href: "/locations/delray-beach" },
-              { title: "Miami", text: "Ocean safety education for families across Miami-Dade County on Miami Beach's iconic Atlantic shoreline.", beaches: "Beaches: Miami Beach • Crandon Park • Haulover Beach", href: "/locations/miami" },
-              { title: "Fort Lauderdale", text: "Rip current training and ocean safety programs for families across Broward County.", beaches: "Beaches: Fort Lauderdale Beach • Pompano Beach • Deerfield Beach", href: "/locations/fort-lauderdale" },
+              { title: "Deerfield Beach", text: "Our fixed Saturday location. Pier-adjacent rip current training on Broward County's Atlantic coastline. Parking and meeting point details inside.", beaches: "Deerfield Beach Pier • Hillsboro Beach • Pompano Beach", href: "/locations/deerfield-beach" },
+              { title: "Miami Beach", text: "Our fixed Sunday location. World-class ocean safety education on Miami-Dade's iconic Atlantic shoreline. Parking and meeting point details inside.", beaches: "South Beach • Crandon Park (Key Biscayne) • Haulover Beach", href: "/locations/miami" },
             ].map((area) => (
               <div key={area.title} className="hover-border-lift" style={{ background: "var(--off-white)", borderRadius: "var(--radius)", padding: "32px 28px", textAlign: "center", border: "2px solid transparent" }}>
                 <div style={{ fontSize: 40, marginBottom: 16 }}>🌊</div>
                 <h3 style={{ fontSize: 20, fontWeight: 700, color: "var(--navy)", marginBottom: 8 }}>{area.title}</h3>
                 <p style={{ fontSize: 14, color: "var(--text-light)", lineHeight: 1.6, marginBottom: 12 }}>{area.text}</p>
                 <div style={{ fontSize: 12, color: "var(--ocean)", fontWeight: 600, marginBottom: 16 }}>{area.beaches}</div>
-                <Link href={area.href} style={{ display: "inline-block", fontSize: 13, fontWeight: 600, color: "var(--ocean)", textDecoration: "none" }}>View {area.title} page →</Link>
+                <Link href={area.href} style={{ display: "inline-block", fontSize: 13, fontWeight: 600, color: "var(--ocean)", textDecoration: "none" }}>View {area.title} guide →</Link>
               </div>
             ))}
           </div>
@@ -457,7 +454,7 @@ export default function HomePage() {
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 100%, rgba(15,163,177,0.15), transparent 70%)" }} aria-hidden="true" />
         <div style={{ position: "relative", zIndex: 2, maxWidth: 600, margin: "0 auto" }}>
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 40px)", fontWeight: 700, color: "#fff", marginBottom: 16 }}>The Ocean Isn&apos;t Going Anywhere. Prepare Your Kids.</h2>
-          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 17, marginBottom: 36, lineHeight: 1.6 }}>Give your child the confidence and skills to enjoy the ocean safely for the rest of their life. Weekend sessions in West Palm Beach, Boca Raton, Delray Beach, Miami & Fort Lauderdale. Spaces are limited.</p>
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 17, marginBottom: 36, lineHeight: 1.6 }}>Give your child the confidence and skills to enjoy the ocean safely for the rest of their life. Sessions every Saturday at Deerfield Beach and every Sunday at Miami Beach. Spaces are limited.</p>
           <Link href="/book-a-session" className="btn-coral">Book a Session →</Link>
         </div>
       </section>
@@ -465,6 +462,7 @@ export default function HomePage() {
       <style>{`
         .schedule-grid { }
         @media (max-width: 640px) { .schedule-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 640px) { .two-col-grid { grid-template-columns: 1fr !important; } }
         .section-label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ocean); margin-bottom: 12px; }
         .section-title { font-family: var(--font-playfair), serif; font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: var(--navy); margin-bottom: 16px; }
         .section-desc { font-size: 17px; color: var(--text-light); max-width: 680px; line-height: 1.7; margin-bottom: 0; }

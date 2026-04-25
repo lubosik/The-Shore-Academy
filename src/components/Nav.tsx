@@ -40,9 +40,8 @@ export default function Nav() {
         right: 0,
         zIndex: 1000,
         transition: "background 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease",
-        background: scrolled ? "rgba(10,22,40,0.98)" : "transparent",
+        background: scrolled ? "rgb(10,22,40)" : "transparent",
         boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.3)" : "none",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
       }}
     >
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? 64 : 80, transition: "height 0.3s ease" }}>
