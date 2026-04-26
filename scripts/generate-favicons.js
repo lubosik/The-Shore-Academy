@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const INPUT = '/Users/ghost/Downloads/Shore Academy New logo.png';
+const INPUT = '/Users/ghost/Downloads/The Shore Academy Logo Removed.png';
 const OUT_DIR = './public';
 
 const sizes = [

@@ -107,7 +107,7 @@ export default function HomePage() {
         {/* Hero background image */}
         <div style={{ position: "absolute", inset: 0 }}>
           <Image
-            src="/images/brand-shot-3.jpg"
+            src="/hero-section.png"
             alt="Shore Academy students training in the Atlantic Ocean with certified lifeguard instructors"
             fill
             style={{ objectFit: "cover", objectPosition: "center" }}
@@ -163,13 +163,8 @@ export default function HomePage() {
           <h2 id="about-title" className="section-title" style={{ maxWidth: 700 }}>The Only Dedicated Ocean Safety School in South Florida</h2>
           <p className="section-desc">Every year, hundreds of drownings happen in open water because people don&apos;t understand the ocean. Rip currents alone claim over 100 lives annually in the U.S. We&apos;re changing that, one student at a time, on the Atlantic Ocean beaches of South Florida.</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center", marginTop: 60 }} className="about-grid">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, borderRadius: "var(--radius)", overflow: "hidden" }}>
-              <div style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "0 4px 20px rgba(18,58,90,0.08)" }}>
-                <Image src="/images/brand-shot-1.jpg" alt="Shore Academy certified lifeguard instructor working with a student on ocean safety skills" width={300} height={280} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
-              </div>
-              <div style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "0 4px 20px rgba(18,58,90,0.08)" }}>
-                <Image src="/images/brand-shot-2.jpg" alt="Shore Academy students learning beach safety and ocean navigation skills on the South Florida coast" width={300} height={280} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
-              </div>
+            <div style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "0 4px 20px rgba(18,58,90,0.08)" }}>
+              <Image src="/images/about-section.png" alt="Shore Academy certified lifeguard instructors working with students on ocean safety skills on the South Florida coast" width={600} height={480} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
               {[
@@ -381,23 +376,20 @@ export default function HomePage() {
       <section id="jlp" aria-labelledby="jlp-title" style={{ padding: "100px 24px", backgroundColor: "#123A5A", color: "#fff", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 70% 30%, rgba(232,90,46,0.08) 0%, transparent 60%), radial-gradient(ellipse at 30% 80%, rgba(230,214,184,0.05) 0%, transparent 50%)" }} aria-hidden="true" />
         <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative", zIndex: 2 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(232,90,46,0.15)", border: "1px solid rgba(232,90,46,0.3)", borderRadius: 50, padding: "10px 24px", marginBottom: 24, fontSize: 13, color: "#E85A2E", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", fontFamily: "'Raleway', sans-serif" }}>
-            Elite Training Program, West Palm Beach, FL
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 24 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "rgba(232,90,46,0.15)", border: "1px solid rgba(232,90,46,0.3)", borderRadius: 50, padding: "10px 24px", fontSize: 13, color: "#E85A2E", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", fontFamily: "'Raleway', sans-serif" }}>
+              Elite Training Program, West Palm Beach, FL
+            </div>
+            <span style={{ display: "inline-block", fontSize: 12, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#E6D6B8", fontFamily: "'Raleway', sans-serif" }}>Junior Lifeguard Program Florida</span>
           </div>
-          <span style={{ display: "inline-block", fontSize: 12, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#E6D6B8", marginTop: 16, marginBottom: 12, fontFamily: "'Raleway', sans-serif" }}>Junior Lifeguard Program Florida</span>
           <h2 id="jlp-title" style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, color: "#fff", marginBottom: 8 }}>The Next Generation of Lifeguards Starts Here</h2>
           <p style={{ fontSize: "clamp(16px, 2vw, 20px)", fontWeight: 600, color: "#E6D6B8", fontStyle: "italic", marginBottom: 16, fontFamily: "'Raleway', sans-serif" }}>&ldquo;Know the Ocean. Respect the Ocean. Protect Each Other.&rdquo;</p>
           <p style={{ fontSize: 17, color: "rgba(255,255,255,0.72)", maxWidth: 650, lineHeight: 1.7, marginBottom: 56, fontFamily: "'Raleway', sans-serif" }}>A quarterly, 4-week intensive junior lifeguard program in South Florida that transforms elite swimmers into future certified lifeguards. Physical training, expert-level rescue skills, USLA competition prep, and a streamlined path to ocean lifeguard employment. The most advanced youth ocean program in Florida.</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }} className="jlp-grid">
             <div>
-              {/* Brand lifestyle images for JLP section */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32, borderRadius: "var(--radius)", overflow: "hidden" }}>
-                <div style={{ borderRadius: "var(--radius)", overflow: "hidden" }}>
-                  <Image src="/images/brand-shot-4.jpg" alt="Junior lifeguard program student in Shore Academy training gear on the beach" width={260} height={200} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
-                </div>
-                <div style={{ borderRadius: "var(--radius)", overflow: "hidden" }}>
-                  <Image src="/images/brand-shot-5.jpg" alt="Shore Academy junior lifeguard program training, future certified ocean lifeguards in South Florida" width={260} height={200} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
-                </div>
+              {/* JLP section image */}
+              <div style={{ borderRadius: "var(--radius)", overflow: "hidden", marginBottom: 32, boxShadow: "0 4px 24px rgba(0,0,0,0.3)" }}>
+                <Image src="/images/jlp-section.png" alt="Shore Academy junior lifeguard program training, future certified ocean lifeguards in South Florida" width={560} height={380} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                 {[
