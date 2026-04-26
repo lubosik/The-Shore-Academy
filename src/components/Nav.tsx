@@ -49,7 +49,7 @@ export default function Nav() {
         <Link href="/" aria-label="The Shore Academy - Ocean Safety School" onClick={() => setOpen(false)}>
           <Image
             src="/logo-new.png"
-            alt="The Shore Academy logo — ocean safety school South Florida"
+            alt="The Shore Academy logo, ocean safety school South Florida"
             width={180}
             height={72}
             style={{ maxHeight: "64px", width: "auto", transition: "max-height 0.3s ease", display: "block" }}

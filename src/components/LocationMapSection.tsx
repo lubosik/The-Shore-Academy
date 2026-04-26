@@ -25,7 +25,7 @@ export default function LocationMapSection({
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <span style={{ display: "inline-block", fontSize: 12, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "var(--teal)", marginBottom: 12 }}>Find Us</span>
         <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, color: "#fff", marginBottom: 16 }}>
-          Parking & Meeting Point — {locationName}
+          Parking & Meeting Point: {locationName}
         </h2>
         <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", maxWidth: 680, lineHeight: 1.7, marginBottom: 40 }}>
           Sessions run every weekend at the same location. Use the map below to find parking spots and your meeting point. Click any marker for details.

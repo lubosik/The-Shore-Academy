@@ -23,7 +23,7 @@ export default function Footer() {
             <div style={{ marginBottom: 16 }}>
               <Image
                 src="/logo-new.png"
-                alt="The Shore Academy logo — ocean safety school South Florida"
+                alt="The Shore Academy logo, ocean safety school South Florida"
                 width={180}
                 height={96}
                 style={{ maxHeight: "96px", width: "auto" }}

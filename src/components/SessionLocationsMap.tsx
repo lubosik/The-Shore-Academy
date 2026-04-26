@@ -33,7 +33,7 @@ const LOCATIONS = {
     badge: "Every Saturday",
     icon: "🌊",
     accentColor: "#0fa3b1",
-    // Deerfield Beach Pier area — placeholder coordinates (update when exact spot confirmed)
+    // Deerfield Beach Pier area, placeholder coordinates (update when exact spot confirmed)
     center: [26.3183, -80.0799] as [number, number],
     zoom: 17,
     markers: [
@@ -61,7 +61,7 @@ const LOCATIONS = {
     ] as [number, number][],
     directionsUrl:
       "https://www.google.com/maps/dir//Deerfield+Beach+Pier,+2200+NE+21st+Ave,+Deerfield+Beach,+FL+33441",
-    note: "Finalising our exact Saturday access point — full details sent the evening before your session.",
+    note: "Finalising our exact Saturday access point. Full details sent the evening before your session.",
     steps: [
       { icon: "🅿️", title: "Park up", text: "Exact lot confirmed at booking. Arrive 15 minutes early." },
       { icon: "🚶", title: "Follow the path", text: "Short walk from parking to the beach access point shown on the map above." },
@@ -75,7 +75,7 @@ const LOCATIONS = {
     badge: "Every Sunday",
     icon: "🏖",
     accentColor: "#e05c3a",
-    // Miami Beach — placeholder coordinates (update when exact spot confirmed)
+    // Miami Beach, placeholder coordinates (update when exact spot confirmed)
     center: [25.7907, -80.13] as [number, number],
     zoom: 16,
     markers: [
@@ -102,7 +102,7 @@ const LOCATIONS = {
       [25.7907, -80.129],
     ] as [number, number][],
     directionsUrl: "https://www.google.com/maps/dir//Miami+Beach,+FL+33139",
-    note: "Finalising our exact Sunday access point — full details sent the evening before your session.",
+    note: "Finalising our exact Sunday access point. Full details sent the evening before your session.",
     steps: [
       { icon: "🅿️", title: "Park up", text: "Exact lot confirmed at booking. Arrive 15 minutes early." },
       { icon: "🚶", title: "Follow the path", text: "Short walk from parking to the beach access point shown on the map above." },
@@ -195,7 +195,7 @@ export default function SessionLocationsMap() {
               >
                 <span style={{ fontSize: 18 }}>{d.icon}</span>
                 <span>
-                  {d.badge} — {d.name}
+                  {d.badge}: {d.name}
                 </span>
               </button>
             );
@@ -235,7 +235,7 @@ export default function SessionLocationsMap() {
                 pointerEvents: "none",
               }}
             >
-              🛰 USGS Satellite — {loc.name}
+              🛰 USGS Satellite: {loc.name}
             </div>
 
             <LeafletMap

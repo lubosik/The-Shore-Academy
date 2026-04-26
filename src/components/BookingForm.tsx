@@ -148,7 +148,7 @@ export default function BookingForm() {
       ? minorStudentSummary
       : students.slice(1).map((s) => `${s.firstName} ${s.lastName} (Age ${s.age})`).join(", ") || "";
 
-    // Build one webhook payload per contact — each creates exactly one GHL contact in Make.com.
+    // Build one webhook payload per contact. Each creates exactly one GHL contact in Make.com.
     // Primary booker is ALWAYS index 0 so Make.com sends the email notification on the first fire only.
     const webhookPayloads: object[] = [];
 
@@ -718,7 +718,7 @@ export default function BookingForm() {
             <h4 style={{ color: "var(--navy)", fontSize: 13, margin: "12px 0 6px", fontWeight: 700 }}>SWIMMING PREREQUISITE ACKNOWLEDGMENT</h4>
             <p>I confirm that my child is a proficient pool swimmer, is comfortable in deep water, and has completed prior swimming instruction. I understand The Shore Academy is an ocean navigation program, not a learn-to-swim program.</p>
             <h4 style={{ color: "var(--navy)", fontSize: 13, margin: "12px 0 6px", fontWeight: 700 }}>PAYMENT & CANCELLATION POLICY</h4>
-            <p>Full payment is required upfront to reserve your session. A $50 cancellation fee applies if you cancel within 24 hours of your scheduled session. There are no refunds for no-shows — failure to attend a session without prior cancellation results in forfeiture of the full session fee. Weather-related reschedules initiated by The Shore Academy are not subject to cancellation fees.</p>
+            <p>Full payment is required upfront to reserve your session. A $50 cancellation fee applies if you cancel within 24 hours of your scheduled session. There are no refunds for no-shows. Failure to attend a session without prior cancellation results in forfeiture of the full session fee. Weather-related reschedules initiated by The Shore Academy are not subject to cancellation fees.</p>
             <h4 style={{ color: "var(--navy)", fontSize: 13, margin: "12px 0 6px", fontWeight: 700 }}>PHOTOGRAPHY & VIDEO CONSENT</h4>
             <p>I grant The Shore Academy permission to photograph and video record my child during sessions for the purposes of providing session media to families and for marketing/promotional use, unless I opt out below.</p>
           </div>

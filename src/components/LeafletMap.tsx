@@ -51,7 +51,7 @@ export default function LeafletMap({
 
       mapInstanceRef.current = map;
 
-      // USGS National Map — free, no API key, high-quality US satellite imagery
+      // USGS National Map, free, no API key, high-quality US satellite imagery
       L.tileLayer(
         "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}",
         {
