@@ -134,7 +134,11 @@ export default async function AcademyResourcesPage() {
         </div>
       </section>
 
-      <style>{`.blog-grid { @media (max-width:768px) { grid-template-columns: 1fr 1fr !important; } @media (max-width:600px) { grid-template-columns: 1fr !important; } }`}</style>
+      <style>{`
+        @media (max-width: 768px) { .blog-grid { grid-template-columns: 1fr 1fr !important; } }
+        @media (max-width: 600px) { .blog-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 768px) { .blog-grid-section { padding: 60px 20px !important; } }
+      `}</style>
     </>
   );
 }
@@ -146,7 +150,7 @@ function BlogCard({ slug, title, excerpt, category, author, readTime, date, imag
   return (
     <article className="hover-blog-card" style={{ background: "var(--off-white)", borderRadius: "var(--radius)", overflow: "hidden", border: "1px solid transparent", display: "flex", flexDirection: "column" }}>
       <div style={{ height: 200, position: "relative", background: "linear-gradient(135deg, var(--deep-blue), var(--ocean))" }}>
-        {imageUrl && <Image src={imageUrl} alt={imageAlt ?? title} fill style={{ objectFit: "cover" }} loading="lazy" />}
+        {imageUrl && <Image src={imageUrl} alt={imageAlt ?? title} fill style={{ objectFit: "cover" }} sizes="(max-width: 600px) 100vw, (max-width: 768px) 50vw, 400px" loading="lazy" />}
         {category && <span style={{ position: "absolute", top: 12, left: 12, background: "var(--teal)", color: "#fff", fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, letterSpacing: "0.5px", textTransform: "uppercase" }}>{category}</span>}
       </div>
       <div style={{ padding: 24, display: "flex", flexDirection: "column", flex: 1 }}>

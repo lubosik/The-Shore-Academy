@@ -164,7 +164,7 @@ export default function SessionLocationsMap() {
         </p>
 
         {/* Day tabs */}
-        <div style={{ display: "flex", gap: 12, marginBottom: 32, flexWrap: "wrap" }}>
+        <div className="map-day-tabs" style={{ display: "flex", gap: 12, marginBottom: 32, flexWrap: "wrap" }}>
           {(["saturday", "sunday"] as const).map((day) => {
             const d = LOCATIONS[day];
             const isActive = active === day;
@@ -370,6 +370,14 @@ export default function SessionLocationsMap() {
       <style>{`
         @media (max-width: 900px) {
           .map-layout { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 768px) {
+          #session-locations { padding: 60px 20px !important; }
+          .map-day-tabs { flex-direction: column !important; }
+          .map-day-tabs button { width: 100% !important; justify-content: center !important; padding: 14px 20px !important; font-size: 14px !important; border-radius: 12px !important; }
+        }
+        @media (max-width: 480px) {
+          .map-day-tabs button { font-size: 13px !important; }
         }
       `}</style>
     </section>

@@ -517,7 +517,7 @@ export default function BookingForm() {
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} style={{ maxWidth: 720, margin: "0 auto", background: "var(--white)", borderRadius: "var(--radius)", padding: 40, boxShadow: "var(--shadow)" }} noValidate>
+      <form onSubmit={handleSubmit} className="booking-form-inner" style={{ maxWidth: 720, margin: "0 auto", background: "var(--white)", borderRadius: "var(--radius)", padding: 40, boxShadow: "var(--shadow)" }} noValidate>
 
         {/* Session Preferences */}
         <div style={{ marginBottom: 32 }}>
@@ -758,9 +758,11 @@ export default function BookingForm() {
         @media (max-width: 768px) {
           .booking-steps { grid-template-columns: 1fr 1fr !important; }
           .form-row { grid-template-columns: 1fr !important; }
+          .booking-form-inner { padding: 28px 20px !important; }
         }
         @media (max-width: 600px) {
           .booking-steps { grid-template-columns: 1fr !important; }
+          .booking-form-inner { padding: 24px 16px !important; }
         }
       `}</style>
     </>

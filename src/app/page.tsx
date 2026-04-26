@@ -110,13 +110,14 @@ export default function HomePage() {
             src="/hero-section.png"
             alt="Shore Academy students training in the Atlantic Ocean with certified lifeguard instructors"
             fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
+            style={{ objectFit: "cover", objectPosition: "center top" }}
+            sizes="100vw"
             priority
           />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(165deg, rgba(18,58,90,0.88) 0%, rgba(18,58,90,0.72) 50%, rgba(18,58,90,0.55) 100%)" }} />
         </div>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "120px 24px 80px", position: "relative", zIndex: 2, width: "100%" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 50, padding: "8px 20px", marginBottom: 32, fontSize: 12, color: "rgba(255,255,255,0.9)", fontWeight: 600, letterSpacing: "0.8px", textTransform: "uppercase", fontFamily: "'Raleway', sans-serif" }}>
+          <div className="hero-badge" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 50, padding: "8px 20px", marginBottom: 32, fontSize: 12, color: "rgba(255,255,255,0.9)", fontWeight: 600, letterSpacing: "0.8px", textTransform: "uppercase", fontFamily: "'Raleway', sans-serif" }}>
             <span className="pulse-dot" style={{ width: 8, height: 8, borderRadius: "50%", background: "#E85A2E", display: "inline-block" }} />
             Now Enrolling &mdash; Saturdays: Deerfield Beach &bull; Sundays: Miami Beach
           </div>
@@ -128,11 +129,11 @@ export default function HomePage() {
           <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "rgba(255,255,255,0.82)", maxWidth: 640, lineHeight: 1.7, marginBottom: 40, fontFamily: "'Raleway', sans-serif" }}>
             South Florida&apos;s only dedicated ocean safety school. Our certified lifeguard instructors teach children, teens, and adults how to navigate rip currents, read waves, and move confidently through the open ocean, with a strict 2:1 student-to-instructor ratio on every session. You must already know how to swim.
           </p>
-          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          <div className="hero-cta" style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
             <Link href="/book-a-session" className="btn-coral">Book a Session →</Link>
             <Link href="/#curriculum" className="btn-outline-white">See Curriculum</Link>
           </div>
-          <div style={{ display: "flex", gap: 40, marginTop: 56, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.15)", flexWrap: "wrap" }}>
+          <div className="hero-stats" style={{ display: "flex", gap: 40, marginTop: 56, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.15)", flexWrap: "wrap" }}>
             {[{ num: "50+", label: "Years Combined Experience" }, { num: "100s", label: "Ocean Rescues" }, { num: "2:1", label: "Student to Instructor Ratio" }].map((s) => (
               <div key={s.label}>
                 <div style={{ fontSize: "clamp(32px, 4vw, 44px)", fontWeight: 700, color: "#fff", lineHeight: 1 }}>{s.num}</div>
@@ -164,7 +165,7 @@ export default function HomePage() {
           <p className="section-desc">Every year, hundreds of drownings happen in open water because people don&apos;t understand the ocean. Rip currents alone claim over 100 lives annually in the U.S. We&apos;re changing that, one student at a time, on the Atlantic Ocean beaches of South Florida.</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "center", marginTop: 60 }} className="about-grid">
             <div style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "0 4px 20px rgba(18,58,90,0.08)" }}>
-              <Image src="/images/about-section.png" alt="Shore Academy certified lifeguard instructors working with students on ocean safety skills on the South Florida coast" width={600} height={480} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
+              <Image src="/images/about-section.png" alt="Shore Academy certified lifeguard instructors working with students on ocean safety skills on the South Florida coast" width={600} height={480} style={{ width: "100%", height: "auto", display: "block" }} sizes="(max-width: 768px) 100vw, 50vw" loading="lazy" />
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
               {[
@@ -276,7 +277,7 @@ export default function HomePage() {
           <p className="section-desc">Professional photography and video of every ocean safety session. Your child&apos;s ocean journey, captured beautifully on the beaches of South Florida.</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridTemplateRows: "repeat(2, 200px)", gap: 16, marginTop: 50 }} className="gallery-grid">
             <div style={{ gridColumn: "span 2", gridRow: "span 2", borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
-              <Image src="/gallery-hero.png" alt="Children and certified ocean lifeguard instructors from The Shore Academy navigating waves together on a South Florida beach" fill style={{ objectFit: "cover" }} loading="lazy" />
+              <Image src="/gallery-hero.png" alt="Children and certified ocean lifeguard instructors from The Shore Academy navigating waves together on a South Florida beach" fill style={{ objectFit: "cover" }} sizes="(max-width: 600px) 100vw, (max-width: 768px) 50vw, 600px" loading="lazy" />
             </div>
             {[
               { src: "https://images.pexels.com/photos/15282267/pexels-photo-15282267.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&dpr=1", alt: "Miami Beach lifeguard tower with yellow warning flags flying, teaching children to identify beach flag colors and safety signals in South Florida" },
@@ -285,7 +286,7 @@ export default function HomePage() {
               { src: "https://images.pexels.com/photos/3560453/pexels-photo-3560453.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&dpr=1", alt: "Aerial view of swimmers and surfers training together in open ocean water, rescue technique and open water safety practice" },
             ].map((img) => (
               <div key={img.src} style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
-                <Image src={img.src} alt={img.alt} fill style={{ objectFit: "cover" }} loading="lazy" />
+                <Image src={img.src} alt={img.alt} fill style={{ objectFit: "cover" }} sizes="(max-width: 600px) 100vw, (max-width: 768px) 50vw, 300px" loading="lazy" />
               </div>
             ))}
           </div>
@@ -389,7 +390,7 @@ export default function HomePage() {
             <div>
               {/* JLP section image */}
               <div style={{ borderRadius: "var(--radius)", overflow: "hidden", marginBottom: 32, boxShadow: "0 4px 24px rgba(0,0,0,0.3)" }}>
-                <Image src="/images/jlp-section.png" alt="Shore Academy junior lifeguard program training, future certified ocean lifeguards in South Florida" width={560} height={380} style={{ width: "100%", height: "auto", display: "block" }} loading="lazy" />
+                <Image src="/images/jlp-section.png" alt="Shore Academy junior lifeguard program training, future certified ocean lifeguards in South Florida" width={560} height={380} style={{ width: "100%", height: "auto", display: "block" }} sizes="(max-width: 768px) 100vw, 560px" loading="lazy" />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                 {[
@@ -451,7 +452,7 @@ export default function HomePage() {
             ].map((r) => (
               <article key={r.href} className="hover-blog-card" style={{ background: "#FFFFFF", borderRadius: "var(--radius)", overflow: "hidden", border: "1px solid rgba(18,58,90,0.15)", boxShadow: "0 4px 20px rgba(18,58,90,0.08)" }}>
                 <div style={{ height: 180, position: "relative", overflow: "hidden" }}>
-                  <Image src={r.img} alt={r.alt} fill style={{ objectFit: "cover" }} loading="lazy" />
+                  <Image src={r.img} alt={r.alt} fill style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 400px" loading="lazy" />
                   <span style={{ position: "absolute", top: 12, left: 12, background: "#E85A2E", color: "#fff", fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 20, letterSpacing: "0.5px", textTransform: "uppercase", fontFamily: "'Raleway', sans-serif" }}>{r.tag}</span>
                 </div>
                 <div style={{ padding: 24 }}>
@@ -552,9 +553,89 @@ export default function HomePage() {
         .about-grid { }
         @media (max-width:768px) { .about-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
         @media (max-width:768px) { .three-col-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width:480px) { .three-col-grid { grid-template-columns: 1fr !important; gap: 16px !important; } }
         @media (max-width:768px) { .jlp-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
         @media (max-width:768px) { .gallery-grid { grid-template-columns: 1fr 1fr !important; grid-template-rows: repeat(3,180px) !important; } }
         @media (max-width:600px) { .gallery-grid { grid-template-columns: 1fr !important; grid-template-rows: none !important; } }
+        @media (max-width:600px) { .gallery-grid > div:first-child { grid-column: span 1 !important; grid-row: span 1 !important; height: 220px !important; position: relative !important; } }
+
+        /* Section padding reductions on mobile */
+        @media (max-width:768px) {
+          #about { padding: 60px 20px !important; }
+          #curriculum { padding: 60px 20px !important; }
+          #team { padding: 60px 20px !important; }
+          #testimonials { padding: 60px 20px !important; }
+          #gallery { padding: 60px 20px !important; }
+          #prereqs { padding: 60px 20px !important; }
+          #pricing { padding: 60px 20px !important; }
+          #booking { padding: 60px 20px !important; }
+          #jlp { padding: 60px 20px !important; }
+          #resources { padding: 60px 20px !important; }
+          #service-areas { padding: 60px 20px !important; }
+          #session-locations { padding: 60px 20px !important; }
+          #faq { padding: 60px 20px !important; }
+        }
+
+        /* Hero: reduce top padding so content isn't buried on mobile */
+        @media (max-width:768px) {
+          #home > div:last-of-type {
+            padding-top: 100px !important;
+            padding-bottom: 60px !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+        }
+
+        /* Hero CTA buttons – stack on small phones */
+        @media (max-width:480px) {
+          .hero-cta { flex-direction: column !important; align-items: stretch !important; }
+          .hero-cta a { text-align: center !important; justify-content: center !important; }
+        }
+
+        /* Hero stats – reduce gap and stack on very small screens */
+        @media (max-width:480px) {
+          .hero-stats { gap: 20px !important; margin-top: 36px !important; }
+        }
+
+        /* Hero badge – allow wrapping */
+        @media (max-width:480px) {
+          .hero-badge { font-size: 10px !important; padding: 8px 14px !important; white-space: normal !important; text-align: center !important; justify-content: center !important; max-width: 100% !important; }
+        }
+
+        /* Team cert badges – allow wrapping more gracefully */
+        @media (max-width:768px) {
+          #team .cert-badges { gap: 10px !important; }
+        }
+
+        /* Disclaimer banner */
+        @media (max-width:600px) {
+          #disclaimer-banner p { font-size: 13px !important; }
+        }
+
+        /* Prereqs section emoji */
+        @media (max-width:480px) {
+          #prereqs .prereq-icon { font-size: 48px !important; }
+        }
+
+        /* Pricing – price number size reduction on mobile */
+        @media (max-width:480px) {
+          .price-num { font-size: 32px !important; }
+        }
+
+        /* JLP right panel card – reduce padding on mobile */
+        @media (max-width:768px) {
+          .jlp-card { padding: 28px 20px !important; }
+        }
+
+        /* Service area schedule cards – reduce font */
+        @media (max-width:480px) {
+          .schedule-card h3 { font-size: 22px !important; }
+        }
+
+        /* Section desc responsive font */
+        @media (max-width:480px) {
+          .section-desc { font-size: 15px !important; }
+        }
       `}</style>
     </>
   );

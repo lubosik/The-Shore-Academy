@@ -167,11 +167,22 @@ export default function LeafletMap({
   }, []);
 
   return (
-    <div
-      ref={mapRef}
-      style={{ width: "100%", height: "100%", minHeight: 460, borderRadius: "inherit" }}
-      aria-label={`Satellite map showing session location at ${locationName}`}
-      role="application"
-    />
+    <>
+      <div
+        ref={mapRef}
+        className="leaflet-map-container"
+        style={{ width: "100%", height: "100%", minHeight: 460, borderRadius: "inherit" }}
+        aria-label={`Satellite map showing session location at ${locationName}`}
+        role="application"
+      />
+      <style>{`
+        @media (max-width: 768px) {
+          .leaflet-map-container { min-height: 300px !important; }
+        }
+        @media (max-width: 480px) {
+          .leaflet-map-container { min-height: 260px !important; }
+        }
+      `}</style>
+    </>
   );
 }

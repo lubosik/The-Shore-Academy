@@ -88,7 +88,10 @@ export default function LocationPage({ loc }: { loc: LocationData }) {
             ))}
           </div>
         </div>
-        <style>{`.beaches-grid { @media (max-width:768px) { grid-template-columns: 1fr !important; } }`}</style>
+        <style>{`
+          @media (max-width: 768px) { .beaches-grid { grid-template-columns: 1fr !important; } }
+          @media (max-width: 768px) { .beaches-section { padding: 60px 20px !important; } }
+        `}</style>
       </section>
 
       {/* Prerequisites (only shown if location has them) */}
@@ -132,7 +135,10 @@ export default function LocationPage({ loc }: { loc: LocationData }) {
             ))}
           </div>
         </div>
-        <style>{`.testimonials-grid { @media (max-width:768px) { grid-template-columns: 1fr !important; } }`}</style>
+        <style>{`
+          @media (max-width: 768px) { .testimonials-grid { grid-template-columns: 1fr !important; } }
+          @media (max-width: 768px) { .testimonials-section { padding: 60px 20px !important; } }
+        `}</style>
       </section>
 
       {/* Neighborhoods served */}

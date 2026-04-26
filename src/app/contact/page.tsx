@@ -124,6 +124,7 @@ export default function ContactPage() {
               src="https://maps.google.com/maps?q=Palm+Beach+County+Florida+Beaches&t=&z=10&ie=UTF8&iwloc=&output=embed"
               width="100%"
               height="480"
+              className="contact-map-iframe"
               style={{ border: 0, display: "block" }}
               allowFullScreen
               loading="lazy"

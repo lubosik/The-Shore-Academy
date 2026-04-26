@@ -30,7 +30,7 @@ export default function LocationMapSection({
         <p style={{ fontSize: 16, color: "rgba(255,255,255,0.65)", maxWidth: 680, lineHeight: 1.7, marginBottom: 40 }}>
           Sessions run every weekend at the same location. Use the map below to find parking spots and your meeting point. Click any marker for details.
         </p>
-        <div style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.4)", height: 500 }}>
+        <div className="location-map-wrapper" style={{ borderRadius: "var(--radius)", overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.4)", height: 500 }}>
           <LeafletMap
             center={mapCenter}
             zoom={mapZoom ?? 17}
@@ -39,6 +39,15 @@ export default function LocationMapSection({
             locationName={locationName}
           />
         </div>
+        <style>{`
+          @media (max-width: 768px) {
+            .location-map-wrapper { height: 300px !important; }
+            .location-map-section { padding: 60px 20px !important; }
+          }
+          @media (max-width: 480px) {
+            .location-map-wrapper { height: 260px !important; }
+          }
+        `}</style>
         <div style={{ display: "flex", gap: 24, marginTop: 24, flexWrap: "wrap" }}>
           {mapMarkers.filter(m => m.type === "parking").map((m) => (
             <div key={m.label} style={{ display: "flex", alignItems: "flex-start", gap: 12, flex: "1 1 260px" }}>

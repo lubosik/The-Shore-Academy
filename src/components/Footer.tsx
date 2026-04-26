@@ -11,8 +11,8 @@ export default function Footer() {
   return (
     <>
       {/* Mission banner immediately above footer */}
-      <div style={{ backgroundColor: "#E85A2E", padding: "20px 24px", textAlign: "center" }}>
-        <p style={{ color: "#FFFFFF", fontWeight: 700, fontSize: 15, letterSpacing: "1px", fontFamily: "'Raleway', sans-serif" }}>
+      <div className="mission-banner" style={{ backgroundColor: "#E85A2E", padding: "20px 24px", textAlign: "center" }}>
+        <p style={{ color: "#FFFFFF", fontWeight: 700, fontSize: 15, letterSpacing: "1px", fontFamily: "'Raleway', sans-serif", lineHeight: 1.6 }}>
           Educate. &nbsp;|&nbsp; Prepare. &nbsp;|&nbsp; Empower. &nbsp;|&nbsp; Confidence in the Water. &nbsp;|&nbsp; For Life.
         </p>
       </div>
@@ -26,6 +26,7 @@ export default function Footer() {
                 alt="The Shore Academy logo, ocean safety school South Florida"
                 width={180}
                 height={96}
+                sizes="(max-width: 768px) 140px, 180px"
                 style={{ maxHeight: "96px", width: "auto" }}
               />
             </div>
@@ -84,7 +85,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div style={{ maxWidth: 1200, margin: "40px auto 0", paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+        <div className="footer-bottom" style={{ maxWidth: 1200, margin: "40px auto 0", paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "'Raleway', sans-serif" }}>&copy; 2026 The Shore Academy LLC. All rights reserved. &bull; Ocean Safety School &bull; South Florida</p>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.3)", fontFamily: "'Raleway', sans-serif" }}>theshoreacademy.com &bull; Junior Lifeguard Program Florida &bull; West Palm Beach &bull; Miami &bull; Fort Lauderdale</p>
         </div>
