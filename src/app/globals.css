@@ -1,17 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 @import "tailwindcss";
 
 :root {
-  --navy: #0a1628;
+  --color-navy:  #123A5A;
+  --color-sand:  #E6D6B8;
+  --color-coral: #E85A2E;
+  --color-white: #FFFFFF;
+
+  /* Legacy aliases kept for backward compat with existing components */
+  --navy: #123A5A;
   --deep-blue: #0d2040;
-  --ocean: #1a6fa0;
-  --ocean-light: #2589be;
-  --teal: #0fa3b1;
-  --coral: #e05c3a;
-  --coral-dark: #c44e2f;
+  --ocean: #123A5A;
+  --ocean-light: #1a5a8a;
+  --teal: #E85A2E;
+  --coral: #E85A2E;
+  --coral-dark: #c94420;
   --gold: #d4a44c;
-  --sand: #f0e6d3;
-  --sand-light: #f7f2ea;
-  --off-white: #f8f9fa;
+  --sand: #E6D6B8;
+  --sand-light: #f2ead9;
+  --off-white: #f8f6f1;
   --white: #ffffff;
   --text: #1a2332;
   --text-light: #5a6a7a;
@@ -41,6 +49,16 @@ body {
   color: var(--foreground);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  font-family: 'Raleway', sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Bebas Neue', serif;
+  letter-spacing: 0.04em;
+}
+
+p, span, li, a, button, input, select, textarea, label {
+  font-family: 'Raleway', sans-serif;
 }
 
 input, select, textarea {
@@ -54,15 +72,15 @@ input, select, textarea {
 }
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 32px rgba(18,58,90,0.15);
 }
 .hover-border-lift {
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .hover-border-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-  border-color: var(--ocean) !important;
+  box-shadow: 0 8px 32px rgba(18,58,90,0.15);
+  border-color: #123A5A !important;
 }
 .hover-team-card {
   transition: background 0.25s ease, transform 0.25s ease;
@@ -82,12 +100,17 @@ input, select, textarea {
   transition: color 0.2s;
 }
 .hover-footer-link:hover {
-  color: var(--teal) !important;
+  color: #E85A2E !important;
 }
 .hover-blog-card {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .hover-blog-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 32px rgba(18,58,90,0.15);
+}
+
+/* Button hover scale */
+.btn-coral:hover, .btn-primary:hover {
+  transform: scale(1.03);
 }

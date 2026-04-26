@@ -40,13 +40,21 @@ export default function Nav() {
         right: 0,
         zIndex: 1000,
         transition: "background 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease",
-        background: scrolled ? "rgb(10,22,40)" : "transparent",
-        boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.3)" : "none",
+        background: "#FFFFFF",
+        borderBottom: "2px solid #123A5A",
+        boxShadow: scrolled ? "0 2px 20px rgba(18,58,90,0.15)" : "0 1px 4px rgba(18,58,90,0.06)",
       }}
     >
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: scrolled ? 64 : 80, transition: "height 0.3s ease" }}>
         <Link href="/" aria-label="The Shore Academy - Ocean Safety School" onClick={() => setOpen(false)}>
-          <Image src="/logo.png" alt="The Shore Academy" width={180} height={72} style={{ height: scrolled ? 52 : 68, width: "auto", transition: "height 0.3s ease", display: "block" }} priority />
+          <Image
+            src="/logo-new.png"
+            alt="The Shore Academy logo — ocean safety school South Florida"
+            width={180}
+            height={72}
+            style={{ maxHeight: "64px", width: "auto", transition: "max-height 0.3s ease", display: "block" }}
+            priority
+          />
         </Link>
 
         {/* Desktop links */}
@@ -55,13 +63,13 @@ export default function Nav() {
             <Link
               key={link.href}
               href={link.href}
-              style={{ color: "rgba(255,255,255,0.85)", fontSize: 14, fontWeight: 500, textDecoration: "none", padding: "8px 12px", borderRadius: 8, transition: "color 0.2s, background 0.2s", letterSpacing: "0.2px" }}
+              style={{ color: "#123A5A", fontSize: 14, fontWeight: 600, textDecoration: "none", padding: "8px 12px", borderRadius: 8, transition: "color 0.2s, background 0.2s", letterSpacing: "0.2px", fontFamily: "'Raleway', sans-serif" }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "#0fa3b1";
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.06)";
+                (e.currentTarget as HTMLElement).style.color = "#E85A2E";
+                (e.currentTarget as HTMLElement).style.background = "rgba(18,58,90,0.06)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.85)";
+                (e.currentTarget as HTMLElement).style.color = "#123A5A";
                 (e.currentTarget as HTMLElement).style.background = "transparent";
               }}
             >
@@ -70,9 +78,15 @@ export default function Nav() {
           ))}
           <Link
             href="/book-a-session"
-            style={{ marginLeft: 8, background: "var(--coral)", color: "#fff", fontWeight: 700, fontSize: 14, padding: "10px 22px", borderRadius: 50, textDecoration: "none", transition: "all 0.2s", whiteSpace: "nowrap" }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--coral-dark)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--coral)"; (e.currentTarget as HTMLElement).style.transform = "none"; }}
+            style={{ marginLeft: 8, background: "#E85A2E", color: "#fff", fontWeight: 700, fontSize: 14, padding: "10px 22px", borderRadius: 8, textDecoration: "none", transition: "all 0.2s", whiteSpace: "nowrap", fontFamily: "'Raleway', sans-serif" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.background = "#c94420";
+              (e.currentTarget as HTMLElement).style.transform = "scale(1.03)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.background = "#E85A2E";
+              (e.currentTarget as HTMLElement).style.transform = "none";
+            }}
           >
             Book a Session
           </Link>
@@ -86,21 +100,21 @@ export default function Nav() {
           className="nav-mobile-toggle"
           style={{ display: "none", flexDirection: "column", gap: 5, background: "none", border: "none", cursor: "pointer", padding: 8, minWidth: 44, minHeight: 44, justifyContent: "center", alignItems: "center" }}
         >
-          <span style={{ display: "block", width: 22, height: 2, background: "#fff", transition: "all 0.25s", transform: open ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
-          <span style={{ display: "block", width: 22, height: 2, background: "#fff", transition: "all 0.25s", opacity: open ? 0 : 1 }} />
-          <span style={{ display: "block", width: 22, height: 2, background: "#fff", transition: "all 0.25s", transform: open ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
+          <span style={{ display: "block", width: 22, height: 2, background: "#123A5A", transition: "all 0.25s", transform: open ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
+          <span style={{ display: "block", width: 22, height: 2, background: "#123A5A", transition: "all 0.25s", opacity: open ? 0 : 1 }} />
+          <span style={{ display: "block", width: 22, height: 2, background: "#123A5A", transition: "all 0.25s", transform: open ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
         </button>
       </div>
 
       {/* Mobile drawer */}
       {open && (
-        <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "rgba(10,22,40,0.98)", backdropFilter: "blur(20px)", padding: "16px 24px 28px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#FFFFFF", backdropFilter: "blur(20px)", padding: "16px 24px 28px", borderTop: "1px solid rgba(18,58,90,0.1)", boxShadow: "0 8px 24px rgba(18,58,90,0.12)" }}>
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              style={{ display: "flex", alignItems: "center", color: "rgba(255,255,255,0.85)", fontSize: 16, fontWeight: 500, textDecoration: "none", padding: "13px 0", borderBottom: "1px solid rgba(255,255,255,0.06)", minHeight: 44 }}
+              style={{ display: "flex", alignItems: "center", color: "#123A5A", fontSize: 16, fontWeight: 600, textDecoration: "none", padding: "13px 0", borderBottom: "1px solid rgba(18,58,90,0.08)", minHeight: 44, fontFamily: "'Raleway', sans-serif" }}
             >
               {link.label}
             </Link>
@@ -108,7 +122,7 @@ export default function Nav() {
           <Link
             href="/book-a-session"
             onClick={() => setOpen(false)}
-            style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: 16, background: "var(--coral)", color: "#fff", fontWeight: 700, fontSize: 16, padding: "14px 24px", borderRadius: 50, textDecoration: "none", minHeight: 52 }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: 16, background: "#E85A2E", color: "#fff", fontWeight: 700, fontSize: 16, padding: "14px 24px", borderRadius: 8, textDecoration: "none", minHeight: 52, fontFamily: "'Raleway', sans-serif" }}
           >
             Book a Session
           </Link>

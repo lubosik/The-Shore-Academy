@@ -1,32 +1,25 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Raleway } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
-const inter = Inter({
+const raleway = Raleway({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-raleway",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://theshoreacademy.com"),
   title: {
-    default: "Ocean Safety School South Florida | Rip Current Training for All Ages | The Shore Academy",
+    default: "The Shore Academy | Ocean Safety School South Florida",
     template: "%s | The Shore Academy",
   },
   description:
-    "The Shore Academy is South Florida's only dedicated ocean safety school. Rip current training, wave navigation, and beach safety for children, teens, and adults in West Palm Beach, Boca Raton, Delray Beach, Miami, and Fort Lauderdale.",
+    "Know the Ocean. Respect the Ocean. Protect Each Other. South Florida's only dedicated ocean safety school. Rip current training, wave navigation, and beach safety for children, teens, and adults.",
   keywords: [
     "ocean safety school south florida",
     "rip current training",
@@ -39,11 +32,20 @@ export const metadata: Metadata = {
     "fort lauderdale ocean safety",
     "beach safety classes florida",
   ],
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", type: "image/x-icon" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "The Shore Academy",
-    images: [{ url: "/hero-image.png", width: 1200, height: 630 }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
@@ -62,8 +64,8 @@ const localBusinessSchema = {
   description:
     "South Florida's only dedicated ocean safety school. Certified lifeguard instructors teaching rip current survival, wave navigation, and beach safety.",
   url: "https://theshoreacademy.com",
-  logo: "https://theshoreacademy.com/logo.png",
-  image: "https://theshoreacademy.com/hero-image.png",
+  logo: "https://theshoreacademy.com/logo-new.png",
+  image: "https://theshoreacademy.com/og-image.png",
   email: "info@theshoreacademy.com",
   address: {
     "@type": "PostalAddress",
@@ -85,15 +87,14 @@ const localBusinessSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" className={raleway.variable}>
       <head>
-        <link rel="icon" href="/favicon.png" type="image/png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
       </head>
-      <body style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}>
+      <body style={{ fontFamily: "'Raleway', sans-serif" }}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-S8YREKZKHN"
           strategy="afterInteractive"
