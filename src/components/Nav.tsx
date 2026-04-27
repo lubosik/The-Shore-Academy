@@ -44,6 +44,10 @@ export default function Nav() {
 
   // On homepage, watch scroll position and update URL to reflect current section
   useEffect(() => {
+    // Never run on real sub-pages (location guides, resources, etc.)
+    if (pathname.startsWith("/locations/") || pathname.startsWith("/academy-resources") ||
+        pathname.startsWith("/book-a-session") || pathname.startsWith("/contact") ||
+        pathname.startsWith("/junior-lifeguard")) return;
     const homePaths = new Set(["/", "/home", "/about", "/curriculum", "/team", "/pricing", "/locations"]);
     if (!homePaths.has(pathname)) return;
 
@@ -94,7 +98,7 @@ export default function Nav() {
       }
 
       const homePaths = new Set(["/", "/home", "/about", "/curriculum", "/team", "/pricing", "/locations"]);
-      const isHomePage = homePaths.has(pathname);
+      const isHomePage = homePaths.has(pathname) && !pathname.startsWith("/locations/");
 
       if (isHomePage) {
         window.history.replaceState(null, "", link.href);
@@ -112,7 +116,7 @@ export default function Nav() {
       e.preventDefault();
       setOpen(false);
       const homePaths = new Set(["/", "/home", "/about", "/curriculum", "/team", "/pricing", "/locations"]);
-      const isHomePage = homePaths.has(pathname);
+      const isHomePage = homePaths.has(pathname) && !pathname.startsWith("/locations/");
 
       if (isHomePage) {
         window.history.replaceState(null, "", "/home");
@@ -124,9 +128,15 @@ export default function Nav() {
     [pathname, router]
   );
 
-  // On initial load, scroll to the section matching the current pathname
-  // (middleware rewrites /about → / etc. so browser URL stays as /about)
+  // On initial load, scroll to the section matching the current pathname.
+  // Only applies to homepage virtual paths — never runs on real sub-pages.
   useEffect(() => {
+    const p = window.location.pathname;
+    // Bail out on all real pages
+    if (p.startsWith("/locations/") || p.startsWith("/academy-resources") ||
+        p.startsWith("/book-a-session") || p.startsWith("/contact") ||
+        p.startsWith("/junior-lifeguard")) return;
+
     const pathToSection: Record<string, string> = {
       "/about": "about",
       "/curriculum": "curriculum",
@@ -134,13 +144,13 @@ export default function Nav() {
       "/pricing": "pricing",
       "/locations": "service-areas",
     };
-    const sectionId = pathToSection[window.location.pathname];
+    const sectionId = pathToSection[p];
     if (sectionId) {
       const timeout = setTimeout(() => scrollToSection(sectionId), 150);
       return () => clearTimeout(timeout);
     }
-    // If landing on /home or /, scroll to top and set URL to /home
-    if (window.location.pathname === "/" || window.location.pathname === "/home") {
+    // Landing on / or /home — normalise to /home
+    if (p === "/" || p === "/home") {
       window.history.replaceState(null, "", "/home");
     }
   }, []);
