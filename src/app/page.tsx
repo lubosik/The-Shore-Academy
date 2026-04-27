@@ -106,6 +106,7 @@ export default function HomePage() {
       <section id="home" aria-label="Hero" style={{ position: "relative", overflow: "hidden", minHeight: "100vh", display: "flex", alignItems: "center" }}>
         {/* Hero background image */}
         <div style={{ position: "absolute", inset: 0 }}>
+          {/* Desktop hero */}
           <Image
             src="/hero-section.png"
             alt="Shore Academy students training in the Atlantic Ocean with certified lifeguard instructors"
@@ -113,6 +114,17 @@ export default function HomePage() {
             style={{ objectFit: "cover", objectPosition: "center top" }}
             sizes="100vw"
             priority
+            className="hero-img-desktop"
+          />
+          {/* Mobile hero */}
+          <Image
+            src="/hero-mobile.png"
+            alt="Shore Academy students training in the Atlantic Ocean with certified lifeguard instructors"
+            fill
+            style={{ objectFit: "cover", objectPosition: "center top" }}
+            sizes="100vw"
+            priority
+            className="hero-img-mobile"
           />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(165deg, rgba(18,58,90,0.88) 0%, rgba(18,58,90,0.72) 50%, rgba(18,58,90,0.55) 100%)" }} />
         </div>
@@ -534,6 +546,12 @@ export default function HomePage() {
       </section>
 
       <style>{`
+        .hero-img-mobile { display: none !important; }
+        .hero-img-desktop { display: block !important; }
+        @media (max-width: 768px) {
+          .hero-img-mobile { display: block !important; }
+          .hero-img-desktop { display: none !important; }
+        }
         .schedule-grid { }
         @media (max-width: 640px) { .schedule-grid { grid-template-columns: 1fr !important; } }
         @media (max-width: 640px) { .two-col-grid { grid-template-columns: 1fr !important; } }
