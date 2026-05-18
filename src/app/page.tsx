@@ -106,25 +106,13 @@ export default function HomePage() {
       <section id="home" aria-label="Hero" style={{ position: "relative", overflow: "hidden", minHeight: "100vh", display: "flex", alignItems: "center" }}>
         {/* Hero background image */}
         <div style={{ position: "absolute", inset: 0 }}>
-          {/* Desktop hero */}
           <Image
-            src="/hero-section.png"
-            alt="Shore Academy students training in the Atlantic Ocean with certified lifeguard instructors"
+            src="/hero-new.jpg"
+            alt="Shore Academy student laughing with joy in the ocean waves during certified lifeguard training on a South Florida beach"
             fill
-            style={{ objectFit: "cover", objectPosition: "center top" }}
+            style={{ objectFit: "cover", objectPosition: "center 20%" }}
             sizes="100vw"
             priority
-            className="hero-img-desktop"
-          />
-          {/* Mobile hero */}
-          <Image
-            src="/hero-mobile.png"
-            alt="Shore Academy students training in the Atlantic Ocean with certified lifeguard instructors"
-            fill
-            style={{ objectFit: "cover", objectPosition: "center top" }}
-            sizes="100vw"
-            priority
-            className="hero-img-mobile"
           />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(165deg, rgba(18,58,90,0.88) 0%, rgba(18,58,90,0.72) 50%, rgba(18,58,90,0.55) 100%)" }} />
         </div>
@@ -287,20 +275,39 @@ export default function HomePage() {
           <span className="section-label">In Action</span>
           <h2 id="gallery-title" className="section-title">Moments That Last a Lifetime</h2>
           <p className="section-desc">Professional photography and video of every ocean safety session. Your child&apos;s ocean journey, captured beautifully on the beaches of South Florida.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridTemplateRows: "repeat(2, 200px)", gap: 16, marginTop: 50 }} className="gallery-grid">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gridTemplateRows: "220px 220px 220px", gap: 12, marginTop: 50 }} className="gallery-grid">
+            {/* Large hero slot — 2 cols × 2 rows: instructor + 5 kids facing ocean (iconic brand shot) */}
             <div style={{ gridColumn: "span 2", gridRow: "span 2", borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
-              <Image src="/gallery-hero.png" alt="Children and certified ocean lifeguard instructors from The Shore Academy navigating waves together on a South Florida beach" fill style={{ objectFit: "cover" }} sizes="(max-width: 600px) 100vw, (max-width: 768px) 50vw, 600px" loading="lazy" />
+              <Image src="/images/gallery/gallery-5.jpg" alt="Shore Academy instructor and five students in branded rash guards standing at the ocean's edge at South Florida beach, lifeguard tower visible" fill style={{ objectFit: "cover", objectPosition: "center" }} sizes="(max-width: 600px) 100vw, (max-width: 768px) 50vw, 600px" loading="lazy" />
             </div>
-            {[
-              { src: "https://images.pexels.com/photos/15282267/pexels-photo-15282267.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&dpr=1", alt: "Miami Beach lifeguard tower with yellow warning flags flying, teaching children to identify beach flag colors and safety signals in South Florida" },
-              { src: "https://images.pexels.com/photos/4319752/pexels-photo-4319752.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&dpr=1", alt: "Aerial view of multiple surfers riding ocean waves together, wave navigation and body surfing technique training at The Shore Academy" },
-              { src: "https://images.pexels.com/photos/29851089/pexels-photo-29851089.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&dpr=1", alt: "Group of children enjoying a sunny beach day, group ocean safety session with The Shore Academy in West Palm Beach Florida" },
-              { src: "https://images.pexels.com/photos/3560453/pexels-photo-3560453.jpeg?auto=compress&cs=tinysrgb&w=800&h=500&dpr=1", alt: "Aerial view of swimmers and surfers training together in open ocean water, rescue technique and open water safety practice" },
-            ].map((img) => (
-              <div key={img.src} style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
-                <Image src={img.src} alt={img.alt} fill style={{ objectFit: "cover" }} sizes="(max-width: 600px) 100vw, (max-width: 768px) 50vw, 300px" loading="lazy" />
-              </div>
-            ))}
+            {/* Top right: instructor pointing at ocean with 4 kids */}
+            <div style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
+              <Image src="/images/gallery/gallery-1.jpg" alt="Certified Shore Academy lifeguard instructor pointing at the ocean, teaching four children to read surf conditions at golden hour on a South Florida beach" fill style={{ objectFit: "cover", objectPosition: "center" }} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+            </div>
+            {/* Top right: two girls laughing in waves */}
+            <div style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
+              <Image src="/images/gallery/gallery-7.jpg" alt="Two girls in Shore Academy rash guards laughing with pure joy as ocean waves splash around them during a South Florida ocean safety session" fill style={{ objectFit: "cover", objectPosition: "center top" }} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+            </div>
+            {/* Mid right: dramatic action — instructor + child in crashing wave */}
+            <div style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
+              <Image src="/images/gallery/gallery-3.jpg" alt="Shore Academy instructor holding a young student's hand while powerful waves crash around them, real ocean training in action on a South Florida beach" fill style={{ objectFit: "cover", objectPosition: "center" }} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+            </div>
+            {/* Mid right: boy riding bodyboard */}
+            <div style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
+              <Image src="/images/gallery/gallery-8.jpg" alt="Young boy in Shore Academy rash guard riding a bodyboard through a breaking wave on a sunny South Florida beach, wave navigation training" fill style={{ objectFit: "cover", objectPosition: "center" }} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+            </div>
+            {/* Bottom row: intimate coaching moment — 2 cols wide */}
+            <div style={{ gridColumn: "span 2", borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
+              <Image src="/images/gallery/gallery-2.jpg" alt="Shore Academy instructor crouching at shore level to point out ocean conditions to two young students, intimate one-on-one coaching at golden hour" fill style={{ objectFit: "cover", objectPosition: "center 40%" }} sizes="(max-width: 600px) 100vw, (max-width: 768px) 100vw, 600px" loading="lazy" />
+            </div>
+            {/* Bottom row: 3 boys bodyboarding with instructor */}
+            <div style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
+              <Image src="/images/gallery/gallery-4.jpg" alt="Three smiling boys in Shore Academy rash guards bodyboarding together in the surf with their instructor during a group ocean safety session in South Florida" fill style={{ objectFit: "cover", objectPosition: "center" }} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+            </div>
+            {/* Bottom row: sunset at Deerfield pier */}
+            <div style={{ borderRadius: "var(--radius-sm)", overflow: "hidden", position: "relative" }}>
+              <Image src="/images/gallery/gallery-6.jpg" alt="Shore Academy instructor and two young students sitting together on Deerfield Beach sand at sunset with the iconic pier silhouetted behind them" fill style={{ objectFit: "cover", objectPosition: "center" }} sizes="(max-width: 600px) 100vw, 300px" loading="lazy" />
+            </div>
           </div>
           <div style={{ marginTop: 24, padding: "20px 24px", background: "#f8f6f1", borderRadius: "var(--radius-sm)", borderLeft: "4px solid #E85A2E", display: "flex", gap: 16, alignItems: "flex-start", border: "1px solid rgba(18,58,90,0.15)", boxShadow: "0 4px 20px rgba(18,58,90,0.08)" }}>
             <span style={{ fontSize: 24, flexShrink: 0, marginTop: 2 }}>📸</span>
@@ -546,18 +553,7 @@ export default function HomePage() {
       </section>
 
       <style>{`
-        .hero-img-mobile { display: none !important; }
-        .hero-img-desktop { display: block !important; }
-        @media (max-width: 768px) {
-          .hero-img-mobile { display: block !important; }
-          .hero-img-desktop { display: none !important; }
-        }
-        .schedule-grid { }
-        @media (max-width: 640px) { .schedule-grid { grid-template-columns: 1fr !important; } }
-        @media (max-width: 640px) { .two-col-grid { grid-template-columns: 1fr !important; } }
-        .section-label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #E85A2E; margin-bottom: 12px; font-family: 'Raleway', sans-serif; }
-        .section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: #123A5A; margin-bottom: 16px; letter-spacing: 0.04em; }
-        .section-desc { font-size: 17px; color: var(--text-light); max-width: 680px; line-height: 1.7; margin-bottom: 0; font-family: 'Raleway', sans-serif; }
+        /* ── Buttons ───────────────────────────────────────────────── */
         .btn-coral { display: inline-flex; align-items: center; gap: 8px; background: #E85A2E; color: #fff; font-weight: 700; font-size: 16px; padding: 16px 36px; border-radius: 8px; text-decoration: none; transition: background 0.2s, transform 0.2s; font-family: 'Raleway', sans-serif; }
         .btn-coral:hover { background: #c94420; transform: scale(1.03); }
         .btn-outline-white { display: inline-flex; align-items: center; gap: 8px; border: 2px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.92); font-weight: 600; font-size: 16px; padding: 14px 32px; border-radius: 8px; text-decoration: none; transition: border-color 0.2s; font-family: 'Raleway', sans-serif; }
@@ -566,93 +562,117 @@ export default function HomePage() {
         .btn-primary-block:hover { background: #c94420; transform: scale(1.03); }
         .btn-coral-block { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 36px; border-radius: 8px; width: 100%; font-size: 15px; font-weight: 700; text-decoration: none; background: #E85A2E; color: #fff; transition: background 0.2s, transform 0.2s; font-family: 'Raleway', sans-serif; }
         .btn-coral-block:hover { background: #c94420; transform: scale(1.03); }
+
+        /* ── Labels / headings ─────────────────────────────────────── */
+        .section-label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #E85A2E; margin-bottom: 12px; font-family: 'Raleway', sans-serif; }
+        .section-title { font-size: clamp(26px, 4vw, 44px); font-weight: 700; color: #123A5A; margin-bottom: 16px; letter-spacing: 0.04em; }
+        .section-desc { font-size: clamp(15px, 2vw, 17px); color: var(--text-light); max-width: 680px; line-height: 1.7; margin-bottom: 0; font-family: 'Raleway', sans-serif; }
+
+        /* ── Pulse animation ───────────────────────────────────────── */
         .pulse-dot { animation: pulse-anim 2s infinite; }
         @keyframes pulse-anim { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .about-grid { }
-        @media (max-width:768px) { .about-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
-        @media (max-width:768px) { .three-col-grid { grid-template-columns: 1fr !important; } }
-        @media (max-width:480px) { .three-col-grid { grid-template-columns: 1fr !important; gap: 16px !important; } }
-        @media (max-width:768px) { .jlp-grid { grid-template-columns: 1fr !important; gap: 32px !important; } }
-        @media (max-width:768px) { .gallery-grid { grid-template-columns: 1fr 1fr !important; grid-template-rows: repeat(3,180px) !important; } }
-        @media (max-width:600px) { .gallery-grid { grid-template-columns: 1fr !important; grid-template-rows: none !important; } }
-        @media (max-width:600px) { .gallery-grid > div:first-child { grid-column: span 1 !important; grid-row: span 1 !important; height: 220px !important; position: relative !important; } }
 
-        /* Section padding reductions on mobile */
+        /* ── Section padding – desktop ─────────────────────────────── */
+        /* Already applied inline; these override on breakpoints below  */
+
+        /* ── Mobile – 768px ────────────────────────────────────────── */
         @media (max-width:768px) {
-          #about { padding: 60px 20px !important; }
-          #curriculum { padding: 60px 20px !important; }
-          #team { padding: 60px 20px !important; }
-          #testimonials { padding: 60px 20px !important; }
-          #gallery { padding: 60px 20px !important; }
-          #prereqs { padding: 60px 20px !important; }
-          #pricing { padding: 60px 20px !important; }
-          #booking { padding: 60px 20px !important; }
-          #jlp { padding: 60px 20px !important; }
-          #resources { padding: 60px 20px !important; }
-          #service-areas { padding: 60px 20px !important; }
-          #session-locations { padding: 60px 20px !important; }
-          #faq { padding: 60px 20px !important; }
+          /* Sections */
+          #about, #curriculum, #team, #testimonials, #gallery,
+          #prereqs, #pricing, #booking, #jlp, #resources,
+          #service-areas, #session-locations, #faq {
+            padding-top: 60px !important;
+            padding-bottom: 60px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+
+          /* Hero content box */
+          #home > div[style] {
+            padding-top: 110px !important;
+            padding-bottom: 60px !important;
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+
+          /* Grids → single column */
+          .about-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .three-col-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+          .jlp-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .schedule-grid { grid-template-columns: 1fr !important; }
+          .two-col-grid { grid-template-columns: 1fr !important; }
+
+          /* Gallery – 2 cols on tablet */
+          .gallery-grid {
+            grid-template-columns: 1fr 1fr !important;
+            grid-template-rows: 200px 200px 200px 200px !important;
+          }
+          /* Hero cell resets to single col span on tablet */
+          .gallery-grid > div:first-child {
+            grid-column: span 2 !important;
+            grid-row: span 1 !important;
+          }
+          /* Bottom-row wide cell resets */
+          .gallery-grid > div:nth-child(6) {
+            grid-column: span 2 !important;
+          }
+
+          /* Hero badge */
+          .hero-badge { flex-wrap: wrap !important; text-align: center !important; justify-content: center !important; white-space: normal !important; font-size: 11px !important; padding: 8px 14px !important; }
+
+          /* Hero CTAs */
+          .hero-cta { flex-direction: column !important; align-items: flex-start !important; }
+          .hero-cta a { min-width: 200px !important; justify-content: center !important; }
+
+          /* Hero stats */
+          .hero-stats { gap: 24px !important; margin-top: 36px !important; padding-top: 28px !important; }
         }
 
-        /* Hero: reduce top padding so content isn't buried on mobile */
-        @media (max-width:768px) {
-          #home > div:last-of-type {
-            padding-top: 100px !important;
-            padding-bottom: 60px !important;
-            padding-left: 20px !important;
-            padding-right: 20px !important;
+        /* ── Small mobile – 600px ───────────────────────────────────── */
+        @media (max-width:600px) {
+          .gallery-grid {
+            grid-template-columns: 1fr !important;
+            grid-template-rows: none !important;
+            gap: 10px !important;
+          }
+          .gallery-grid > div {
+            grid-column: span 1 !important;
+            grid-row: span 1 !important;
+            height: 220px !important;
           }
         }
 
-        /* Hero CTA buttons – stack on small phones */
+        /* ── Extra small – 480px ────────────────────────────────────── */
         @media (max-width:480px) {
-          .hero-cta { flex-direction: column !important; align-items: stretch !important; }
-          .hero-cta a { text-align: center !important; justify-content: center !important; }
+          /* Hero badge */
+          .hero-badge { font-size: 10px !important; padding: 6px 12px !important; letter-spacing: 0.4px !important; }
+
+          /* Hero CTAs – full width stack */
+          .hero-cta { align-items: stretch !important; }
+          .hero-cta a { text-align: center !important; }
+
+          /* Hero stats – vertical stack */
+          .hero-stats { flex-direction: column !important; gap: 16px !important; margin-top: 28px !important; }
+
+          /* Sections tighter on very small screens */
+          #about, #curriculum, #team, #testimonials, #gallery,
+          #prereqs, #pricing, #booking, #jlp, #resources,
+          #service-areas, #session-locations, #faq {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
         }
 
-        /* Hero stats – reduce gap and stack on very small screens */
-        @media (max-width:480px) {
-          .hero-stats { gap: 20px !important; margin-top: 36px !important; }
+        /* ── Large screens – 1400px+ ────────────────────────────────── */
+        @media (min-width:1400px) {
+          .gallery-grid {
+            grid-template-rows: 260px 260px 260px !important;
+          }
         }
-
-        /* Hero badge – allow wrapping */
-        @media (max-width:480px) {
-          .hero-badge { font-size: 10px !important; padding: 8px 14px !important; white-space: normal !important; text-align: center !important; justify-content: center !important; max-width: 100% !important; }
-        }
-
-        /* Team cert badges – allow wrapping more gracefully */
-        @media (max-width:768px) {
-          #team .cert-badges { gap: 10px !important; }
-        }
-
-        /* Disclaimer banner */
-        @media (max-width:600px) {
-          #disclaimer-banner p { font-size: 13px !important; }
-        }
-
-        /* Prereqs section emoji */
-        @media (max-width:480px) {
-          #prereqs .prereq-icon { font-size: 48px !important; }
-        }
-
-        /* Pricing – price number size reduction on mobile */
-        @media (max-width:480px) {
-          .price-num { font-size: 32px !important; }
-        }
-
-        /* JLP right panel card – reduce padding on mobile */
-        @media (max-width:768px) {
-          .jlp-card { padding: 28px 20px !important; }
-        }
-
-        /* Service area schedule cards – reduce font */
-        @media (max-width:480px) {
-          .schedule-card h3 { font-size: 22px !important; }
-        }
-
-        /* Section desc responsive font */
-        @media (max-width:480px) {
-          .section-desc { font-size: 15px !important; }
+        @media (min-width:1800px) {
+          .gallery-grid {
+            grid-template-rows: 300px 300px 300px !important;
+          }
         }
       `}</style>
     </>
