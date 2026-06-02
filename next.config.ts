@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+      {
         source: '/how-to-escape-a-rip-current.html',
         destination: '/academy-resources/how-to-escape-a-rip-current',
         permanent: true,
